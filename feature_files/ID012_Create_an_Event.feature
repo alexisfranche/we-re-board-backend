@@ -11,7 +11,7 @@ so that I can let other users know about my event.
 		And I am on the create event page
 		When I create the event 
 		Then the system should create my event
-		And I should see the event in the 'Manage my Event' page under 'hostsing'
+		And I should see the event in the 'Manage my Events' page under 'hosting'
 			
 	Scenario: Create an event as a suspended user
 	
