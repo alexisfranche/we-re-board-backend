@@ -58,8 +58,8 @@ so that I can let other users know about my event.
 		Given I am signed in as user Pierre
 		And I am on the create event page
 		When I create the event with these informations:
-			|Name			    |Game |Date	     |Location					      |Description|
-			|Friendly poker at my place!|	  |07/02/2020|3448 Rue Clark, Montréal, Québec H2S 3G5, Canada|blabla     |
+			|Name			    |Game|Date	    |Location					     |Description|
+			|Friendly poker at my place!|	 |07/02/2020|3448 Rue Clark, Montréal, Québec H2S 3G5, Canada|blabla     |
 		And I do not specify a game type for the event
 		Then I should receive an error message
 		
@@ -70,8 +70,8 @@ so that I can let other users know about my event.
 		Given I am signed in as user Pierre
 		And I am on the create event page
 		When I create the event with these informations:
-			|Name			    |Game |Date	     |Location					      |Description|
-			|			    |Poker|07/02/2020|3448 Rue Clark, Montréal, Québec H2S 3G5, Canada|blabla     |
+			|Name|Game |Date      |Location				     	       |Description|
+			|    |Poker|07/02/2020|3448 Rue Clark, Montréal, Québec H2S 3G5, Canada|blabla     |
 		And I do not specify a name for the event
 		Then I should receive an error message
 		
