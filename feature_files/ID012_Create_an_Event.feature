@@ -39,7 +39,7 @@ so that I can let other users know about my event.
 	
 		Given I am signed in as user Pierre
 		And I am on the create event page
-		But I specify an address that does not exist for the event
+		But I specify an address for the event that does not exist
 		When I create the event 
 		Then I should receive an error message
 		
