@@ -16,6 +16,13 @@ Scenario: Changing password successfully
 Given I enter a new password 
 Then The system saves my new password
 
+Scenario: Changing password fails due to invalid password
+
+Error Flow - The system should not save the new password
+
+Given I enter a new invalid password 
+Then I should receive an error message
+
 Scenario: Changing email to a new valid email
 Given I enter a new email 
 Then The system saves my email
