@@ -11,7 +11,7 @@ so that I can inform the event manager of my interest.
 		And I am on the active event page titled Poker
 		When I apply for the event 
 		Then the system should send my application to the event manager
-		And I should see the event in the 'Manage my Event' page under 'applied'
+		And I should see the event in the 'Manage my Events' page under 'applied'
 			
 	Scenario: Apply for an active event as a suspended user
 	
