@@ -39,7 +39,7 @@ users_schema = UserSchema(many=True)
 
 @app.route('/', methods=['GET'])
 def hello():
-    return "<h1> were board backend </h1>"
+    return "<h1> were board backend!!! </h1>"
 
 # Create a Product
 @app.route('/user', methods=['POST'])
