@@ -1,6 +1,8 @@
 from flask import Flask, request , jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from werkzeug.security import generate_password_hash, check_password_hash
+
 import os
 
 # Init app
@@ -41,14 +43,14 @@ users_schema = UserSchema(many=True)
 def hello():
     return "<h1> were board backend!!! </h1>"
 
-# Create a Product
+# Create a user
 @app.route('/user', methods=['POST'])
 def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
 
-    new_user = User(name, email, password)
+    new_user = User(name, email, generate_password_hash(password))
 
     db.session.add(new_user)
     db.session.commit()
@@ -62,6 +64,35 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
+# endpoint to get user detail by id
+@app.route("/user/<id>", methods=["GET"])
+def user_detail(id):
+    user = User.query.get(id)
+    return user_schema.jsonify(user)
+
+
+# endpoint to update user
+@app.route("/user/<id>", methods=["PUT"])
+def user_update(id):
+    user = User.query.get(id)
+    username = request.json['username']
+    email = request.json['email']
+
+    user.email = email
+    user.username = username
+
+    db.session.commit()
+    return user_schema.jsonify(user)
+
+
+# endpoint to delete user
+@app.route("/user/<id>", methods=["DELETE"])
+def user_delete(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+
+    return user_schema.jsonify(user)
 db.create_all()
 
 # Run Server 
