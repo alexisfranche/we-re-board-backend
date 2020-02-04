@@ -1,4 +1,4 @@
-from flask import Flask, request , jsonify
+from flask import Flask, request , jsonify, abort, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -49,8 +49,9 @@ def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
+    bio = []
 
-    new_user = User(name, email, generate_password_hash(password))
+    new_user = User(name, email, generate_password_hash(password), bio)
 
     db.session.add(new_user)
     db.session.commit()
@@ -64,10 +65,26 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
-# endpoint to get user detail by id
+# endpoint to get profile info by id (returns everything about user)
+@app.route("/user/profile/<id>", methods=["GET"])
+def profile_detail(id):
+    user = User.query.get(id)
+    #error handling
+    print(user.password)
+    if user is None:
+       abort(404)
+    return user_schema.jsonify(user)
+
+# endpoint to get user detail by id (returns restricted information about user)
 @app.route("/user/<id>", methods=["GET"])
 def user_detail(id):
     user = User.query.get(id)
+    #error handling
+    if user is None:
+       abort(404)
+    entriesToRemove = ('password', 'email')
+    user.password = None
+    user.email = None
     return user_schema.jsonify(user)
 
 
@@ -94,6 +111,13 @@ def user_delete(id):
 
     return user_schema.jsonify(user)
 db.create_all()
+
+
+
+#error 404 handling
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 # Run Server 
 if __name__ == '__main__':
