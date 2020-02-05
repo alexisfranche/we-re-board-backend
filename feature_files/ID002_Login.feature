@@ -12,12 +12,12 @@
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
       | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
       And I am on the login page
-     When I enter "Amine" on the Username field
+     When I enter "amine@outlook.ca" on the email field
       And I enter "bla3Bla;" on the Password field
       And I press the "login" button
      Then I see the "home" page
   
-  Scenario: Login to the app with a username that hasn't been registered
+  Scenario: Login to the app with an email that hasn't been registered
   
   Error Flow - The system display an error message
   
@@ -25,7 +25,7 @@
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
       | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
       And I am browsing the login page
-     When I enter "Amie" on the Username field
+     When I enter "notAmine@outlook.ca" on the email field
       And I enter "bla3Bla;" on the Password field
       And I press the "login" button
      Then the system should display an error message
@@ -39,7 +39,7 @@
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
       | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
       And I am browsing the login page
-     When I enter "Amine" on the Username field
+     When I enter "amine@outlook.ca" on the email field
       And I enter "bla3" on the Password field
       And I press the "login" button
      Then the system should display an error message
