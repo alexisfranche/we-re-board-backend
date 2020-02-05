@@ -51,7 +51,7 @@ def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
-    bio = []
+    bio = request.json['bio']
 
     new_user = User(name, email, generate_password_hash(password), bio)
 
