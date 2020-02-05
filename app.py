@@ -87,6 +87,20 @@ def user_detail(id):
     user.email = None
     return user_schema.jsonify(user)
 
+# endpoint to login user
+@app.route("/login", methods=["POST"])
+def login_user():
+    email = request.json['email']
+    password = request.json['password']
+    user = User.query.filter_by(email=email).first()
+    #error handling
+    if user is None:
+        abort(401)
+    else:
+        password_hash = user.password
+        if not check_password_hash(password_hash,password):
+            abort(401)
+    return make_response(jsonify({'data': 'You were logged in'}), 201)
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
@@ -101,7 +115,6 @@ def user_update(id):
     db.session.commit()
     return user_schema.jsonify(user)
 
-
 # endpoint to delete user
 @app.route("/user/<id>", methods=["DELETE"])
 def user_delete(id):
@@ -112,12 +125,20 @@ def user_delete(id):
     return user_schema.jsonify(user)
 db.create_all()
 
-
-
 #error 404 handling
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
+#error 401 handling
+@app.errorhandler(401)
+def unauthorized(error):
+    return make_response(jsonify({'error': 'Invalid Credentials. Please try again.'}), 401)
+
+#error custom 403 handling
+@app.errorhandler(403)
+def custom_unauthorized(error):
+    return make_response(jsonify({'error': 'You need to login first.'}), 403)
 
 # Run Server 
 if __name__ == '__main__':
