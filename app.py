@@ -24,16 +24,18 @@ class User(db.Model):
     name = db.Column(db.String(100), unique=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
+    bio = db.Column(db.String(200))
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, bio):
         self.name=name
         self.email=email
         self.password=password
+        self.bio=bio
 
 # User Schema
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'email', 'password')
+        fields = ('id', 'name', 'email', 'password', 'bio')
 
 # Init Schema User
 user_schema = UserSchema()
