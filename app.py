@@ -24,18 +24,16 @@ class User(db.Model):
     name = db.Column(db.String(100), unique=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
-    bio = db.Column(db.String(200))
 
-    def __init__(self, name, email, password, bio):
+    def __init__(self, name, email, password):
         self.name=name
         self.email=email
         self.password=password
-        self.bio=bio
 
 # User Schema
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'email', 'password', 'bio')
+        fields = ('id', 'name', 'email', 'password')
 
 # Init Schema User
 user_schema = UserSchema()
@@ -51,9 +49,8 @@ def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
-    bio = request.json['bio']
 
-    new_user = User(name, email, generate_password_hash(password), bio)
+    new_user = User(name, email, generate_password_hash(password))
 
     db.session.add(new_user)
     db.session.commit()
