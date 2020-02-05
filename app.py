@@ -123,7 +123,6 @@ def user_delete(id):
     db.session.commit()
 
     return user_schema.jsonify(user)
-db.create_all()
 
 #error 404 handling
 @app.errorhandler(404)
@@ -140,6 +139,8 @@ def unauthorized(error):
 def custom_unauthorized(error):
     return make_response(jsonify({'error': 'You need to login first.'}), 403)
 
+db.create_all()
+
 # Run Server 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
