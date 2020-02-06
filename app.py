@@ -89,16 +89,14 @@ def user_detail(id):
 # endpoint to login user
 @app.route("/login", methods=["POST"])
 def login_user():
-    email = request.json['email']
-    password = request.json['password']
-    user = User.query.filter_by(email=email).first()
+    login_email = request.json['email']
+    login_password = request.json['password']
+    user = User.query.filter_by(email=login_email).first()
     #error handling
     if user is None:
+        abort(403)
+    elif not check_password_hash(user.password, login_password):
         abort(401)
-    else:
-        password_hash = user.password
-        if not check_password_hash(password_hash,password):
-            abort(401)
     return make_response(jsonify({'data': 'You were logged in'}), 201)
 
 # endpoint to update user
