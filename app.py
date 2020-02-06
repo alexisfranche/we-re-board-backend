@@ -121,6 +121,14 @@ def user_delete(id):
 
     return user_schema.jsonify(user)
 
+#Endpoint to check email exists
+@app.route("/email/<email>", methods=["GET"])
+def checkIfEmailTaken(email):
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return "None"
+    return "Some"
+
 #error 404 handling
 @app.errorhandler(404)
 def not_found(error):
