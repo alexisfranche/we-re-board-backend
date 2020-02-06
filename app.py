@@ -87,7 +87,7 @@ def user_detail(id):
     return user_schema.jsonify(user)
 
 # endpoint to login user
-@app.route("/login", methods=["GET"])
+@app.route("/login", methods=["POST"])
 def login_user():
     email = request.json['email']
     password = request.json['password']
