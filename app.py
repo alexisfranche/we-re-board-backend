@@ -108,12 +108,12 @@ def user_update(id):
 
     user.email = email
     user.username = username
-
+    
     db.session.commit()
     return user_schema.jsonify(user)
-
+    
 # endpoint to modify profile
-@app.route("/user/profile<id>", methods=["PUT"])
+@app.route("/user/profile/<id>", methods=["PUT"])
 def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
