@@ -111,22 +111,6 @@ def user_update(id):
     
     db.session.commit()
     return user_schema.jsonify(user)
-    
-# endpoint to modify profile
-@app.route("/user/profile/<id>", methods=["PUT"])
-def user_update(id):
-    user = User.query.get(id)
-    username = request.json['username']
-    email = request.json['email']
-    password = request.json['password']
-    
-    user.password = generate_password_hash(password)
-    user.email = email
-    user.username = username
-   
-    db.session.update(user)
-    db.session.commit()
-    return user_schema.jsonify(user)
 
 # endpoint to delete user
 @app.route("/user/<id>", methods=["DELETE"])
