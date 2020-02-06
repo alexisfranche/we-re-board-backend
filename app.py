@@ -94,10 +94,10 @@ def login_user():
     user = User.query.filter_by(email=login_email).first()
     #error handling
     if user is None:
-        abort(403)
+        abort(401)
     elif not check_password_hash(user.password, login_password):
         abort(401)
-    return make_response(jsonify({'data': 'You were logged in'}), 201)
+    return make_response(jsonify({'data': 'You were logged in'}), 200)
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
