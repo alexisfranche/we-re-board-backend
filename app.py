@@ -24,6 +24,7 @@ class User(db.Model):
     name = db.Column(db.String(100), unique=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
+    description = db.Column(db.String(300))
 
     def __init__(self, name, email, password):
         self.name=name
@@ -33,7 +34,7 @@ class User(db.Model):
 # User Schema
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'email', 'password')
+        fields = ('id', 'name', 'email', 'password','description')
 
 # Init Schema User
 user_schema = UserSchema()
@@ -49,7 +50,6 @@ def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
-
     new_user = User(name, email, generate_password_hash(password))
 
     db.session.add(new_user)
@@ -69,7 +69,6 @@ def get_users():
 def profile_detail(id):
     user = User.query.get(id)
     #error handling
-    print(user.password)
     if user is None:
        abort(404)
     return user_schema.jsonify(user)
@@ -81,9 +80,8 @@ def user_detail(id):
     #error handling
     if user is None:
        abort(404)
-    entriesToRemove = ('password', 'email')
-    user.password = None
-    user.email = None
+    delattr(user, 'password')
+    delattr(user, 'email')
     return user_schema.jsonify(user)
 
 # endpoint to login user
@@ -105,10 +103,13 @@ def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
     email = request.json['email']
+    description = request.jason['description']
 
     user.email = email
     user.username = username
-    
+    user.description = description
+
+    db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
@@ -119,10 +120,12 @@ def profile_update(id):
     username = request.json['username']
     email = request.json['email']
     password= request.json['password']
+    description = request.jason['description']
 
     user.password= generate_password_hash(password)
     user.email = email
     user.username = username
+    user.description = description
     
     db.session.update(user)
     db.session.commit()
