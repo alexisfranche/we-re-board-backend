@@ -77,7 +77,8 @@ class FlaskTestCase(unittest.TestCase):
     def test_create_user(self, name, email, password):
         return self.app.post(
             '/user',
-            data=jsonify({"name":name, "email": email, "password": password})
+            data=dict(name=name, email=email, password=password),
+            follow_redirects=True
         )
 
     def test_create_user_working(self):
