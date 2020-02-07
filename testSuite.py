@@ -1,6 +1,6 @@
 from app import app, db
-from flask import jsonify
 import unittest
+import json
 
 
 class FlaskTestCase(unittest.TestCase):
@@ -75,9 +75,16 @@ class FlaskTestCase(unittest.TestCase):
         # self.assertIn(b'Hello from the shell', response.data)
 
     def test_create_user(self, name, email, password):
+        
+        data = {
+            'name': name,
+            'email': email,
+            'password': password
+        }
+
         return self.app.post(
             '/user',
-            data=dict(name=name, email=email, password=password),
+            data=json.dumps(data),
             follow_redirects=True
         )
 
