@@ -1,6 +1,6 @@
 from app import app, db
 import unittest
-import json
+from flask import json, jsonify
 
 
 class FlaskTestCase(unittest.TestCase):
@@ -82,9 +82,11 @@ class FlaskTestCase(unittest.TestCase):
             'password': password
         }
 
-        return self.app.post(
+        testApp = self.app.test_client()
+
+        return testApp.post(
             '/user',
-            data=json.dumps(data),
+            data=json.loads(data),
             follow_redirects=True
         )
 
