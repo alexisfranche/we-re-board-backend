@@ -65,5 +65,25 @@ class FlaskTestCase(unittest.TestCase):
         #                        )
         # self.assertIn(b'Hello from the shell', response.data)
 
+    def test_create_user(name, email, password):
+        return app.post(
+            '/user',
+            data=jsonify({"name":name, "email": email, "password": password})
+        )
+
+    def test_create_user_working(self):
+        response = self.test_create_user('testUser', 'testUser@gmail.com', '1234qwer')
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_user_fail(self):
+        response = self.test_create_user('testUser2', 'testUser2@gmail.com', 'testUseremail')
+        self.assertEqual(response.status_code)
+
+    def test_create_user_duplicate_mail(self):
+        response = self.test_create_user('John Doe', 'johndoe@gmail.com', 'p4ssw0rd')
+        self.assertEqual(response.status_code, 200)
+        response = self.test_create_user('John Doe', 'johndoe@gmail.com', 'pAsSwOrD')
+        self.assertEqual(response.status_code, )
+
 if __name__ == '__main__':
     unittest.main()
