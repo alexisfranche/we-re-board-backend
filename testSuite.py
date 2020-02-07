@@ -89,17 +89,17 @@ class FlaskTestCase(unittest.TestCase):
         )
 
     def test_create_user_working(self):
-        response = self.test_create_user('testUser', 'testUser@gmail.com', '1234qwer')
+        response = self.test_create_user("testUser", "testUser@gmail.com", "1234qwer")
         self.assertEqual(response.status_code, 200)
 
     #def test_create_user_fail(self):
-     #   response = self.test_create_user('testUser2', 'testUser2@gmail.com', 'testUseremail')
+     #   response = self.test_create_user("testUser2", "testUser2@gmail.com", "testUseremail")
       #  self.assertEqual(response.status_code, 500)
 
     def test_create_user_duplicate_mail(self):
-        response = self.test_create_user('John Doe', 'johndoe@gmail.com', 'p4ssw0rd')
+        response = self.test_create_user("John Doe", "johndoe@gmail.com", "p4ssw0rd")
         self.assertEqual(response.status_code, 200)
-        response = self.test_create_user('John Doe', 'johndoe@gmail.com', 'pAsSwOrD')
+        response = self.test_create_user("John Doe", "johndoe@gmail.com", "pAsSwOrD")
         self.assertEqual(response.status_code, 500)
 
 if __name__ == '__main__':
