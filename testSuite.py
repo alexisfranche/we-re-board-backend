@@ -66,7 +66,7 @@ class FlaskTestCase(unittest.TestCase):
         # self.assertIn(b'Hello from the shell', response.data)
 
     def test_create_user(self, name, email, password):
-        return app.post(
+        return self.app.post(
             '/user',
             data=jsonify({"name":name, "email": email, "password": password})
         )
