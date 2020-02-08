@@ -75,7 +75,7 @@ def profile_detail(id):
 
 # endpoint to get profile info by email (returns everything about user)
 @app.route("/user/profile/<email>", methods=["GET"])
-def profile_detail(email):
+def profile_detail_em(email):
     user = User.query.filter_by(email=email).first()
     #error handling
     if user is None:
