@@ -73,6 +73,15 @@ def profile_detail(id):
        abort(404)
     return user_schema.jsonify(user)
 
+# endpoint to get profile info by email (returns everything about user)
+@app.route("/user/profile/<email>", methods=["GET"])
+def profile_detail(email):
+    user = User.query.filter_by(email=email).first()
+    #error handling
+    if user is None:
+       abort(404)
+    return user_schema.jsonify(user)
+
 # endpoint to get user detail by id (returns restricted information about user)
 @app.route("/user/<id>", methods=["GET"])
 def user_detail(id):
