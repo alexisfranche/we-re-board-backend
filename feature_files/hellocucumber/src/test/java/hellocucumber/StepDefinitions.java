@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 public class StepDefinitions {
 
+    ////FOR ID_004 View My Profile
     private int user_id;
     private String name;
     private String email;
