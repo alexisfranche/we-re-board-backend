@@ -78,7 +78,7 @@ class FlaskTestCase(unittest.TestCase):
         testApp = app.test_client()
         return testApp.post(
             '/user',
-            data=json.loads(data),
+            data=jsonify({"name":name, "email": email, "password": password}),
             follow_redirects=True
         )
 
