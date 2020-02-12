@@ -75,15 +75,12 @@ class FlaskTestCase(unittest.TestCase):
         # self.assertIn(b'Hello from the shell', response.data)
 
     def test_create_user(self, name, email, password):
-        
         data = {
             'name': name,
             'email': email,
             'password': password
         }
-
         testApp = self.app.test_client()
-
         return testApp.post(
             '/user',
             data=json.loads(data),
