@@ -1,17 +1,27 @@
 from app import app, db
 import unittest
 from flask import json, jsonify
+from flask_testing import TestCase
 
 
-class FlaskTestCase(unittest.TestCase):
+class FlaskTestCase(TestCase):
 
-    def setUp(self):
+    def create_app(self):
+        app = Flask(__name__)
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://ozqhfdunsqxrnj:758183f57a6468bbfd5f6f4f99c6a753f1e3a2afae37699c8922ca520a488bd3@ec2-52-203-98-126.compute-1.amazonaws.com:5432/d674iu1eqcu3l9"
+        app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://sydoycoqvcnehv:9946673c5725406a3968af22503f38dc9991fe037ca81340b9b7cafd515048a6@ec2-35-172-85-250.compute-1.amazonaws.com:5432/d7h2q33o63tl49"
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-        self.app = app.test_client()
+        self.app = app.test_client();
+        return app
+
+    def setUp(self):
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
 
     # Ensure that Flask was set up correctly
     def test_index(self):
