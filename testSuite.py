@@ -83,7 +83,10 @@ class FlaskTestCase(unittest.TestCase):
         )
 
     def test_create_user_working(self):
-        response = self.test_create_user("testUser", "testUser@gmail.com", "1234qwer")
+        name="testUser"
+        email="testUser@gmail.com"
+        password="1234qwer"
+        response = self.test_create_user(name, email, password)
         self.assertEqual(response.status_code, 200)
 
     #def test_create_user_fail(self):
