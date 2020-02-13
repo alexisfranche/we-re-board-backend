@@ -1,13 +1,12 @@
-from app import app, db
 import unittest
-from flask import json, jsonify
-from flask_testing import TestCase
 
+from flask_testing import TestCase
+from app import app, db
+from flask import json, jsonify
 
 class FlaskTestCase(TestCase):
 
     def create_app(self):
-        app = Flask(__name__)
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
