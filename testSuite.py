@@ -12,7 +12,7 @@ class FlaskTestCase(TestCase):
         app.config['DEBUG'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://sydoycoqvcnehv:9946673c5725406a3968af22503f38dc9991fe037ca81340b9b7cafd515048a6@ec2-35-172-85-250.compute-1.amazonaws.com:5432/d7h2q33o63tl49"
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-        self.app = app.test_client();
+        self.app = app.test_client()
         return app
 
     def setUp(self):

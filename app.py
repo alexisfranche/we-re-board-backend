@@ -11,7 +11,6 @@ app = Flask(__name__)
 # Database
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://ozqhfdunsqxrnj:758183f57a6468bbfd5f6f4f99c6a753f1e3a2afae37699c8922ca520a488bd3@ec2-52-203-98-126.compute-1.amazonaws.com:5432/d674iu1eqcu3l9"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['TESTING'] = True
 
 # Init db
 db = SQLAlchemy(app)
@@ -51,7 +50,11 @@ def add_user():
     email = request.json['email']
     password = request.json['password']
 
-    new_user = User(name, email, generate_password_hash(password))
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        abort(404)
+    else:
+        new_user = User(name, email, generate_password_hash(password))
 
     db.session.add(new_user)
     db.session.commit()
