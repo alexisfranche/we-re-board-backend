@@ -84,8 +84,7 @@ class FlaskTestCase(TestCase):
         # self.assertIn(b'Hello from the shell', response.data)
 
     def test_create_user(self, name, email, password):
-        testApp = app.test_client()
-        return testApp.post(
+        return self.app.post(
             '/user',
             data=jsonify({"name":name, "email": email, "password": password}),
             follow_redirects=True
