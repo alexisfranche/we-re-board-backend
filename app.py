@@ -99,7 +99,7 @@ def login_user():
 
 # endpoint to logout user
 @app.route("/logout", methods=["GET"])
-def login_user():
+def logout_user():
     return make_response(jsonify({'data': 'You were logged out'}), 200)
 
 # endpoint to update user
