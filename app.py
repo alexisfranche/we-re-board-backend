@@ -108,7 +108,7 @@ def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
     email = request.json['email']
-    description = request.jason['description']
+    description = request.json['description']
 
     user.email = email
     user.username = username
@@ -125,7 +125,7 @@ def profile_update(id):
     username = request.json['username']
     email = request.json['email']
     password= request.json['password']
-    description = request.jason['description']
+    description = request.json['description']
 
     user.password= generate_password_hash(password)
     user.email = email
