@@ -97,6 +97,11 @@ def login_user():
         abort(401)
     return make_response(jsonify({'data': 'You were logged in'}), 200)
 
+# endpoint to logout user
+@app.route("/logout", methods=["GET"])
+def login_user():
+    return make_response(jsonify({'data': 'You were logged out'}), 200)
+
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
 def user_update(id):

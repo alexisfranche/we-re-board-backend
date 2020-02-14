@@ -1,2 +1,3 @@
+cd tests
 lettuce
 pause
