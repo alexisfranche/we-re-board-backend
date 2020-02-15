@@ -106,12 +106,12 @@ def logout_user():
 @app.route("/user/<id>", methods=["PUT"])
 def user_update(id):
     user = User.query.get(id)
-    username = request.json['username']
+    name = request.json['name']
     email = request.json['email']
     description = request.json['description']
 
     user.email = email
-    user.username = username
+    user.name = name
     user.description = description
 
     db.session.update(user)
@@ -134,14 +134,14 @@ def user_update_name(email):
 @app.route("/user/profile/<id>", methods=["PUT"])
 def profile_update(id):
     user = User.query.get(id)
-    username = request.json['username']
+    name = request.json['name']
     email = request.json['email']
     password= request.json['password']
     description = request.json['description']
 
     user.password= generate_password_hash(password)
     user.email = email
-    user.username = username
+    user.name = name
     user.description = description
     
     db.session.update(user)
