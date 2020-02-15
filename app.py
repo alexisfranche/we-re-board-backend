@@ -115,7 +115,7 @@ def user_update(id):
     user.name = name
     user.description = description
 
-    db.session.update(user)
+    #db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
@@ -127,7 +127,7 @@ def user_update_name(email):
     
     user.name = name
     
-    dp.session.update(user)
+    #dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
@@ -145,7 +145,7 @@ def profile_update(id):
     user.name = name
     user.description = description
     
-    db.session.update(user)
+    #db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
