@@ -92,7 +92,7 @@ def login_user():
     user = User.query.filter_by(email=email).first()
     #error handling
     if user is None:
-        abort(401)
+        abort(custom401)
     elif not check_password_hash(user.password, password):
         abort(401)
     return make_response(jsonify({'data': 'You were logged in'}), 200)
@@ -163,7 +163,12 @@ def not_found(error):
 def unauthorized(error):
     return make_response(jsonify({'error': 'Invalid Credentials. Please try again.'}), 401)
 
-#error custom 403 handling
+#error custom 401 handling
+@app.errorhandler(custom401)
+def unauthorized(error):
+    return make_response(jsonify({'error': 'Invalid Credentials. Please register first.'}), 401)
+
+#error 403 handling
 @app.errorhandler(403)
 def custom_unauthorized(error):
     return make_response(jsonify({'error': 'You need to login first.'}), 403)
