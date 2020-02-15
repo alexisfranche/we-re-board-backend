@@ -92,7 +92,7 @@ def login_user():
     user = User.query.filter_by(email=email).first()
     #error handling
     if user is None:
-        abort(custom401)
+        abort(404)
     elif not check_password_hash(user.password, password):
         abort(401)
     return make_response(jsonify({'data': 'You were logged in'}), 200)
