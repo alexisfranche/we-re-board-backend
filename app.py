@@ -118,6 +118,18 @@ def user_update(id):
     db.session.commit()
     return user_schema.jsonify(user)
 
+#endpoint to update my name
+@app.route("/user/profile/name/<email>", methods=["PUT"])
+def user_update_name(email):
+    user = User.query.filter_by(email=email).first()
+    name = request.json['name']
+    
+    user.name = name
+    
+    dp.session.update(user)
+    db.session.commit()
+    return user_schema.jsonify(user)
+
 # modify 
 @app.route("/user/profile/<id>", methods=["PUT"])
 def profile_update(id):
