@@ -4,9 +4,7 @@
   As a registered user of the "We're Board" app, I would like to login to the app 
   so that I can use the application.
   
-  Scenario: Login to the app
-  
-  Normal Flow - The system should log me into the app
+  Scenario: Login to the app (Normal Flow)
   
     Given the following user has already registered
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
@@ -17,9 +15,7 @@
       And I press the "login" button
      Then I see the "home" page
   
-  Scenario: Login to the app with an email that hasn't been registered
-  
-  Error Flow - The system display an error message
+  Scenario: Login to the app with an email that hasn't been registered (Error Flow)
   
     Given the following user is the only one registered 
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
@@ -31,9 +27,7 @@
      Then the system should display an error message
       And stay on the login page
   
-  Scenario: Login to the app with an incorrect password
-  
-  Error Flow - The system should display an error message
+  Scenario: Login to the app with an incorrect password (Error Flow)
   
     Given the following user is the only one registered 
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
