@@ -151,7 +151,7 @@ def checkIfEmailTaken(email):
     user = User.query.filter_by(email=email).first()
     if user is None:
         return "None"
-    return "Some"
+    return user_schema.jsonify(user)        #was "Some"
 
 #error 404 handling
 @app.errorhandler(404)
