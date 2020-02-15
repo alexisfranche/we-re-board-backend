@@ -6,37 +6,20 @@
   
   Scenario: Login to the app (Normal Flow)
   
-    Given the following user has already registered
-      | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
-      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
-      And I am on the login page
-     When I enter "amine@outlook.ca" on the email field
-      And I enter "bla3Bla;" on the Password field
-      And I press the "login" button
-     Then I see the "home" page
+    Given I am already registered to the application with id=26
+     When I login to the application with email = "amine@outlook.ca" and password = "bla3Bla;"
+     Then the system logs me in and displays a confirmation message
   
   Scenario: Login to the app with an email that hasn't been registered (Error Flow)
   
-    Given the following user is the only one registered 
-      | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
-      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
-      And I am browsing the login page
-     When I enter "notAmine@outlook.ca" on the email field
-      And I enter "bla3Bla;" on the Password field
-      And I press the "login" button
-     Then the system should display an error message
-      And stay on the login page
+    Given I am not yet registered to the application
+     When I login to the application with email = "notRegistered@outlook.ca" and password = "bla3Bla;"
+     Then the system does not log me in and displays a "Not found" error message
   
   Scenario: Login to the app with an incorrect password (Error Flow)
   
-    Given the following user is the only one registered 
-      | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
-      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
-      And I am browsing the login page
-     When I enter "amine@outlook.ca" on the email field
-      And I enter "bla3" on the Password field
-      And I press the "login" button
-     Then the system should display an error message
-      And stay on the login page
+    Given I am already registered to the application with id=26
+     When I login to the application with email = "amine@outlook.ca" and password = "bla4Pla;"
+     Then the system does not log me in and displays a "Invalid Credentials. Please try again." error message
   
   
