@@ -133,7 +133,7 @@ def user_update_name(email):
 
 #endpoint to update my desc
 @app.route("/user/profile/desc/<email>", methods=["PUT"])
-def user_update_name(email):
+def user_update_desc(email):
     user = User.query.filter_by(email=email).first()
     description = request.json['description']
     
