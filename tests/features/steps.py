@@ -1,7 +1,39 @@
 from lettuce import *
 import urllib, json
+import requests
+from requests.auth import HTTPDigestAuth
  
 ## STEP DEFINITIONS
+
+# ID_002 Login
+
+@step('I am already registered to the application with id = (\d+)')
+def given_i_am_registered_to_the_application(step, user_id):
+    world.user_id = user_id
+
+
+@step('I login to the application with email = "([^"]*)" and password = "([^"]*)"')
+def when_i_login_to_the_application(step, email, password):
+    result = getJSONfromLoginAPI(email, password)
+    if response.status_code == 401 or response.status_code == 404:
+        world.error = result.error
+    else:
+        world.message = result.data
+
+
+@step('The system logs me in and displays a confirmation message')
+def then_the_system_logs_me_in_and_displays_a_confirmation_message(step):
+    expected_confirmation_message = "You were logged in"
+    assert world.message == expected_confirmation_message, \
+        "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
+
+
+@step('Then the system does not log me in and displays a "([^"]*)" error message')
+def then_the_system_does_not_log_me_in_and_displays_an_error_message(step, message):
+    expected_error_message = message
+    assert world.error == expected_error_message, \
+        "Got error message = %s instead of %s" % (world.error, expected_error_message)
+
 
 #ID_003 Logout
 
@@ -70,3 +102,9 @@ def getJSONfromAPI(url):
     response = urllib.urlopen(url)
     data = json.loads(response.read())
     return data
+
+def getJSONfromLoginAPI(name, password):
+    url = "https://were-board.herokuapp.com/user/profile"
+    data = { "name": name, "password": password }
+    response = requests.post(url, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    return response
