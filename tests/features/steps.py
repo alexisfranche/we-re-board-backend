@@ -97,6 +97,114 @@ def assert_error_404(step, expected):
         "Got error = %s instead of %s"  % (world.error["error"], expected)
 
 
+#ID__005 - Modify Personal Profile
+
+@step('I am logged in as an user with id = (\d+)')
+def have_user_id(step, user_id, email):
+    world.user_id = user_id
+    world.email = email
+
+
+@step('my account does not exist')
+def have_non_valid_user_id(step):
+    world.user_id = -1
+    world.email = -1
+
+@step('modifying my name')
+def modify_name(step):
+    result = getJSONfromAPI("/user/profile/name/" + str(world.email))
+    if 'error' in result:
+        world.error = result
+    else:
+        world.profile = result
+
+
+@step('the system displays my new name:')
+def assert_personal_profile(step):
+    assert str(world.myprofile["id"]) == str(step.hashes[0]["ID"]), \
+        "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
+    assert world.myprofile["name"] == step.hashes[0]["Name"], \
+        "Got name = %s instead of %s" % (world.myprofile["name"], str(step.hashes[0]["Name"]))
+
+
+@step('the system displays an "([^"]*)" error message')
+def assert_error_404(step, expected):
+    assert world.error["error"] == expected, \
+        "Got error = %s instead of %s" % (world.error["error"], expected)
+
+
+@step('modifying my password')
+def modify_password(step):
+    result = getJSONfromAPI("/user/profile/" + str(world.user_id))
+    if 'error' in result:
+        world.error = result
+    else:
+        world.profile = result
+
+
+@step('the system displays my new password:')
+def assert_personal_profile(step):
+    assert str(world.myprofile["id"]) == str(step.hashes[0]["ID"]), \
+        "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
+    assert world.myprofile["password"] == step.hashes[0]["Password"], \
+        "Got password = %s instead of %s" % (world.myprofile["password"], str(step.hashes[0]["Password"]))
+
+@step('the system displays an "([^"]*)" error message')
+def assert_error_404(step, expected):
+    assert world.error["error"] == expected, \
+        "Got error = %s instead of %s" % (world.error["error"], expected)
+
+
+
+@step('modifying my email')
+def modify_email(step):
+    result = getJSONfromAPI("/user/" + str(world.user_id))
+    if 'error' in result:
+        world.error = result
+    else:
+        world.profile = result
+
+
+@step('the system displays my new email:')
+def assert_personal_profile(step):
+    assert str(world.myprofile["id"]) == str(step.hashes[0]["ID"]), \
+        "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
+    assert world.myprofile["email"] == step.hashes[0]["Email"], \
+        "Got email = %s instead of %s" % (world.myprofile["email"], str(step.hashes[0]["Email"]))
+
+
+
+@step('the system displays an "([^"]*)" error message')
+def assert_error_404(step, expected):
+    assert world.error["error"] == expected, \
+        "Got error = %s instead of %s" % (world.error["error"], expected)
+
+
+
+@step('modifying my description')
+def modify_email(step):
+    result = getJSONfromAPI("/user/profile/desc/" + str(world.email))
+    if 'error' in result:
+        world.error = result
+    else:
+        world.profile = result
+
+
+@step('the system displays my new description:')
+def assert_personal_profile(step):
+    assert str(world.myprofile["id"]) == str(step.hashes[0]["ID"]), \
+        "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
+    assert world.myprofile["description"] == step.hashes[0]["Description"], \
+        "Got description = %s instead of %s" % (world.myprofile["description"], str(step.hashes[0]["Description"]))
+
+@step('the system displays an "([^"]*)" error message')
+def assert_error_404(step, expected):
+    assert world.error["error"] == expected, \
+        "Got error = %s instead of %s" % (world.error["error"], expected)
+
+
+
+
 ##HELPER FUCNTIONS
 def getJSONfromAPI(url):
     response = urllib.urlopen(url)
