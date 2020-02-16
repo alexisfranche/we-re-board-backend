@@ -1,12 +1,12 @@
 from lettuce import *
 import urllib, json
 import requests
+
 from requests.auth import HTTPDigestAuth
  
 ## STEP DEFINITIONS
 
 # ID_002 Login
-
 @step('I am already registered to the application with id = (\d+)')
 def given_i_am_registered_to_the_application(step, user_id):
     world.user_id = user_id

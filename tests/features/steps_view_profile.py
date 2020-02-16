@@ -23,25 +23,19 @@ def view_user_profile(step):
     if 'error' in result:
         world.error = result
     else:
-        world.myprofile = result
+        world.profile = result
 
 
 @step('the system displays the following:')
 def assert_user_profile(step):
-    assert str(world.myprofile["id"]) == str(step.hashes[0]["ID"]), \
-        "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
+    assert str(world.profile["id"]) == str(step.hashes[0]["ID"]), \
+        "Got id = %s instead of %s" % (world.profile["id"], str(step.hashes[0]["ID"]))
 
-    assert world.myprofile["name"] == step.hashes[0]["Name"], \
-        "Got name = %s instead of %s" % (world.myprofile["name"], str(step.hashes[0]["Name"]))
+    assert world.profile["name"] == step.hashes[0]["Name"], \
+        "Got name = %s instead of %s" % (world.profile["name"], str(step.hashes[0]["Name"]))
 
-    assert world.myprofile["email"] == step.hashes[0]["Email"], \
-        "Got email = %s instead of %s" % (world.myprofile["email"], str(step.hashes[0]["Email"]))
-
-    assert world.myprofile["description"] == step.hashes[0]["Description"], \
-        "Got description = %s instead of %s" % (world.myprofile["description"], str(step.hashes[0]["Description"]))
-
-    assert world.myprofile["password"] == step.hashes[0]["Password"], \
-        "Got password = %s instead of %s" % (world.myprofile["password"], str(step.hashes[0]["Password"]))
+    assert world.profile["description"] == step.hashes[0]["Description"], \
+        "Got description = %s instead of %s" % (world.profile["description"], str(step.hashes[0]["Description"]))
 
 
 @step('the system displays an "([^"]*)" error message')
