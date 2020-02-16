@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
+import re
 
 # Init app
 app = Flask(__name__)
@@ -52,6 +53,8 @@ def add_user():
     name = request.json['name']
     email = request.json['email']
     password = request.json['password']
+    checkEmail(email)
+    password_check(password)
     new_user = User(name, email, generate_password_hash(password))
 
     db.session.add(new_user)
@@ -59,6 +62,50 @@ def add_user():
 
     return user_schema.jsonify(new_user)
 
+regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+
+def checkEmail(email):  
+  
+    if(re.search(regex,email)):  
+        print("valid password")
+    
+    else:  
+        abort(400, {'message': 'Invalid Email'})
+
+
+def password_check(passwd): 
+      
+    SpecialSym =['$', '@', '#', '%'] 
+    val = True
+      
+    if len(passwd) < 2: 
+        abort(400, {'message': 'length should be at least 6'})
+
+        val = False
+          
+    if not any(char.isdigit() for char in passwd): 
+        print('Password should have at least one numeral') 
+        abort(400, {'message': 'Password should have at least one numeral'})
+
+        val = False
+          
+    if not any(char.isupper() for char in passwd): 
+        print('Password should have at least one uppercase letter') 
+        abort(400, {'message': 'Password should have at least one uppercase letter'})
+
+        val = False
+          
+    if not any(char.islower() for char in passwd): 
+        print('Password should have at least one lowercase letter')
+        abort(400, {'message': 'Password should have at least one lowercase letter'})
+
+        val = False
+          
+    if not any(char in SpecialSym for char in passwd): 
+        print('Password should have at least one of the symbols $@#') 
+        val = False
+    if val: 
+        return val
 # Get all users
 @app.route('/user', methods=['GET'])
 def get_users():
