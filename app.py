@@ -242,7 +242,7 @@ def not_found(error):
     
 #error 400 handling
 @app.errorhandler(400)
-def not_found(error):
+def update_error(error):
     return make_response(jsonify({'error': 'Not found'}), 400)
     
 # error 401 handling

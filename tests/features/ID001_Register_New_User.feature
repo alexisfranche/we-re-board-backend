@@ -46,7 +46,7 @@
       And I clicked on the register button
      When I fill in these information to my profile:
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
-      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
+      | Amine | Alikacem | Jack    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
       And the username 'Jack' is already used
      Then the system should display an error message
   
