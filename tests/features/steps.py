@@ -39,11 +39,13 @@ def then_the_system_should_send_me_an_email(step):
 @step('I should now be able to sign in to the app')
 def and_i_should_now_be_able_to_sign_in_to_the_app(step):
     url = "https://were-board.herokuapp.com/email/" + world.email
-    response = getJSONfromAPI(url)
+    result = getJSONfromAPI(url)
+    
     if 'error' in result:
         world.error = result["error"]
     else:
-        response = getJSONfromLoginAPI(email, password)
+        id = result["id"]
+        response = getJSONfromLoginAPI(world.email, world.password)
         result = response 
         if 'error' in result:
             world.error = result["error"]
@@ -52,7 +54,7 @@ def and_i_should_now_be_able_to_sign_in_to_the_app(step):
             expected_confirmation_message = "You were logged in"
             assert world.message == expected_confirmation_message, \
             "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
-            deleteAPI("https://were-board.herokuapp.com/user/"+str(result["id"]))
+            deleteAPI("https://were-board.herokuapp.com/user/"+str(id))
             
 @step('My password doesn\'t respect the format')
 def and_my_password_doesn_t_respect_the_format(step):
@@ -60,8 +62,11 @@ def and_my_password_doesn_t_respect_the_format(step):
     
 @step('the system should display an error message')
 def then_the_system_should_display_an_error_message(step):
-    assert world.error == 'Invalid email or password'
-        "Got error = %s"  % (world.error["error"])
+    assert world.error == 'Invalid email or password',\
+        "Got error = %s"  % (world.error)
+@step('the email is already used')
+def but_the_email_is_already_used(step):
+    pass
     
 @step('the username \'([^\']*)\' is already used')
 def and_the_username_group1_is_already_used(step, group1):
@@ -159,7 +164,7 @@ def assert_personal_profile(step):
 @step('the system displays an "([^"]*)" error message')
 def assert_error_404(step, expected):
     assert world.error == expected, \
-        "Got error = %s instead of %s"  % (world.error["error"], expected)
+        "Got error = %s instead of %s"  % (world.error, expected)
 
 
 #ID__005 - Modify Personal Profile
@@ -308,8 +313,8 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
      
 @step('I should receive an error message')
 def then_i_should_receive_an_error_message(step):
-    assert world.error["error"] == 'Invalid email or password'
-        "Got error = %s"  % (world.error["error"])
+    assert world.error == 'Invalid email or password',\
+        "Got error = %s"  % (world.error)
     
 # ID_010 View selected user profile
 
