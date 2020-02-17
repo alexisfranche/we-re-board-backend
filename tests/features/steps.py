@@ -4,7 +4,38 @@ import requests
 
 from requests.auth import HTTPDigestAuth
  
-## STEP DEFINITIONS
+# STEP DEFINITIONS
+class User():
+    def __init__( self, name, email, password):
+        self.name=name
+        self.email=email
+        self.password=password
+#ID_001 Register New User
+@step('Given there is no user registered with the email \'([^\']*)\'')
+def is_not_existing_user( step, email):
+    result= requests.get("https://were-board.herokuapp.com/emailcheck/"+str(email))
+    if (result.text=="Some"):
+        user= getJSONfromAPI("https://were-board.herokuapp.com/email/"+str(email))
+        requests.delete("https://were-board.herokuapp.com/email/"+str(user["id"]))
+'''
+@step('Given the following is an existing user:')
+def is_existing_user(step):
+    world.user= User(**step.hashes.first)
+    requests.post("https://were-board.herokuapp.com/user", data=json.dumps({"name": world.user.name, "email":world.user.email, "password": world.user.password}), headers={"Content-Type": "application/json"})
+'''        
+@step('When I submit the following information to the sign-up form:')
+def submit_information(step):
+    world.user= User(**step.hashes.first)
+    world.result= requests.post("https://were-board.herokuapp.com/user",data= json.dumps({"name": world.user.name, "email":world.user.email, "password": world.user.password}), headers={"Content-Type": "application/json"})
+    
+@step('Then I should be able to sign in to the app with the provided email and password')
+def should_be_able_to_sign_in( step):
+    response= requests.post("https://were-board.herokuapp.com/login", data=json.dumps({ "email": world.user.email, "password": world.user.password }), headers={"Content-Type": "application/json"})
+    assert response.status_code==200
+
+@step('Then the system should send an error message')
+def assert_error_message( step):
+    assert world.result.status_code == 400
 
 # ID_002 Login
 @step('I am already registered to the application with id = (\d+)')
@@ -34,7 +65,7 @@ def then_the_system_does_not_log_me_in_and_displays_an_error_message(step, messa
     assert world.error == expected_error_message, \
         "Got error message = %s instead of %s" % (world.error, expected_error_message)
 
-
+        
 #ID_003 Logout
 
 @step('I am logged in the application as an user with id = (\d+)')
