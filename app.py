@@ -158,7 +158,8 @@ def user_update(id):
     name = request.json['name']
     email = request.json['email']
     description = request.json['description']
-
+    checkEmail(email)
+    password_check(password)
     user.email = email
     user.name = name
     user.description = description
@@ -199,7 +200,8 @@ def profile_update(id):
     email = request.json['email']
     password = request.json['password']
     description = request.json['description']
-
+    checkEmail(email)
+    password_check(password)
     user.password = generate_password_hash(password)
     user.email = email
     user.name = name
