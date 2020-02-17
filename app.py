@@ -158,7 +158,8 @@ def user_update(id):
     name = request.json['name']
     email = request.json['email']
     description = request.json['description']
-
+    checkEmail(email)
+    password_check(password)
     user.email = email
     user.name = name
     user.description = description
@@ -199,7 +200,8 @@ def profile_update(id):
     email = request.json['email']
     password = request.json['password']
     description = request.json['description']
-
+    checkEmail(email)
+    password_check(password)
     user.password = generate_password_hash(password)
     user.email = email
     user.name = name
@@ -237,7 +239,12 @@ def getUserWithEmail(email):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
+    
+#error 400 handling
+@app.errorhandler(400)
+def update_error(error):
+    return make_response(jsonify({'error': 'Not found'}), 400)
+    
 # error 401 handling
 @app.errorhandler(401)
 def unauthorized(error):
