@@ -141,9 +141,9 @@ def login_user():
     user = User.query.filter_by(email=email).first()
     # error handling
     if user is None:
-        abort(404)
+        abort(401, {'error': 'User does not exist. Please register first.'})
     elif not check_password_hash(user.password, password):
-        abort(401)
+        abort(401, {'error': 'Invalid Credentials. Please try again.'})
     return make_response(jsonify({'data': 'You were logged in'}), 200)
 
 # endpoint to logout user
