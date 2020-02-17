@@ -26,7 +26,8 @@ def when_i_fill_in_these_information_to_my_profile(step):
     world.description = step.hashes[0]["Description"]
   
     result = createUserAPI(world.username, world.email, world.password)
-
+    assert result == "ok", \
+            "Got message = %s instead of %s" % (world.username, world.password)
     if 'error' in result:
         world.error = result["error"]
     else:
@@ -52,7 +53,6 @@ def and_i_should_now_be_able_to_sign_in_to_the_app(step):
             expected_confirmation_message = "You were logged in"
             assert world.message == expected_confirmation_message, \
             "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
-            deleteAPI("https://were-board.herokuapp.com/user/"+str(result["id"]))
             
 @step('My password doesn\'t respect the format')
 def and_my_password_doesn_t_respect_the_format(step):
@@ -60,9 +60,9 @@ def and_my_password_doesn_t_respect_the_format(step):
     
 @step('the system should display an error message')
 def then_the_system_should_display_an_error_message(step):
-    assert world.error == 'Invalid email or password'
+    assert world.error["error"] in ['length should be at least 6', 'Password should have at least one numeral', 'Password should have at least one uppercase letter', 'Password should have at least one lowercase letter', 'Password should have at least one of the symbols $@#'], \
         "Got error = %s"  % (world.error["error"])
-    
+    response = postJSONtoAPI
 @step('the username \'([^\']*)\' is already used')
 def and_the_username_group1_is_already_used(step, group1):
     pass #API not implemented
@@ -308,7 +308,7 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
      
 @step('I should receive an error message')
 def then_i_should_receive_an_error_message(step):
-    assert world.error["error"] == 'Invalid email or password'
+    assert world.error["error"] in ['length should be at least 6', 'Password should have at least one numeral', 'Password should have at least one uppercase letter', 'Password should have at least one lowercase letter', 'Password should have at least one of the symbols $@#'], \
         "Got error = %s"  % (world.error["error"])
     
 # ID_010 View selected user profile
@@ -344,7 +344,7 @@ def createUserAPI(name, email, password):
     }
     response = requests.request("POST", url, headers=headers, data = payload)
 
-    return json.loads(response.text.encode('utf8'))
+    return response.text.encode('utf8')
     
 def getJSONfromLoginAPI(email, password):
     url = "https://were-board.herokuapp.com/login"
