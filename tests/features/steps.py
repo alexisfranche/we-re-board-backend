@@ -150,21 +150,20 @@ def assert_personal_profile(step):
         "Got id = %s instead of %s" % (world.myprofile["id"], str(step.hashes[0]["ID"]))
         
     assert world.myprofile["name"] == step.hashes[0]["Name"], \
-         "Got name = %s instead of %s" % (world.myprofile["name"], str(step.hashes[0]["Name"]))
+        "Got name = %s instead of %s" % (world.myprofile["name"], str(step.hashes[0]["Name"]))
          
-    assert world.myprofile["email"] == step.hashes[0]["Email"], \
-         "Got email = %s instead of %s" % (world.myprofile["email"], str(step.hashes[0]["Email"])) 
+    assert str(world.myprofile["email"]) == str(step.hashes[0]["Email"]), \
+        "Got email = %s instead of %s" % (str(world.myprofile["email"]), str(step.hashes[0]["Email"])) 
          
     assert world.myprofile["description"] == step.hashes[0]["Description"], \
-         "Got description = %s instead of %s" % (world.myprofile["description"], str(step.hashes[0]["Description"]))
+        "Got description = %s instead of %s" % (world.myprofile["description"], str(step.hashes[0]["Description"]))
          
-    assert world.myprofile["password"] == step.hashes[0]["Password"], \
-         "Got password = %s instead of %s" % (world.myprofile["password"], str(step.hashes[0]["Password"]))
+    assert str(world.myprofile["password"]) == str(step.hashes[0]["Password"]), \
+        "Got password = %s instead of %s" % (str(world.myprofile["password"]), str(step.hashes[0]["Password"]))
 
 @step('the system displays an "([^"]*)" error message')
 def assert_error_404(step, expected):
-    assert world.error == expected, \
-        "Got error = %s instead of %s"  % (world.error, expected)
+    assert world.error == expected, "Got error = %s instead of %s"  % (world.error, expected)
 
 
 #ID__005 - Modify Personal Profile
@@ -174,7 +173,7 @@ def given_i_enter_a_new_name_group1(step, group1):
     world.newname = group1
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
-        world.error = result
+        world.error = result["error"]
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
@@ -206,7 +205,7 @@ def when_i_enter_a_new_password_group1(step, group1):
     world.newpassword = group1
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
-        world.error = result
+        world.error = result["error"]
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
@@ -314,6 +313,26 @@ def then_i_should_receive_an_error_message(step):
     
 # ID_010 View selected user profile
 
+@step('I am a user of We\'re Board with id=(\d+)')
+def given_i_am_a_user_of_we_re_board_with_id_20(step, number):
+    world.user_id = number
+@step(u'And I am logged into We\'re Board')
+def and_i_am_logged_into_we_re_board(step):
+    pass
+@step(u'When I access the page of a non-existing user')
+def when_i_access_the_page_of_a_non_existing_user(step):
+    world.viewed_user_id = -1
+    result = getJSONfromAPI("https://were-board.herokuapp.com/user/" + str(world.viewed_user_id))
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.myprofile = result
+
+@step(u'Then a "([^"]*)" message is displayed')
+def then_a_group1_message_is_displayed(step, group1):
+    assert world.error == group1,\
+        "Got error = %s instead of %s"  % (world.error, group1)
+    
 @step('I am logged in the application as an user with id = "([^"]*)"')
 def given_i_am_logged_in_the_application(step, user_id):
     world.user_id = user_id
@@ -324,9 +343,9 @@ def view_user_profile(step, viewed_user_id):
     world.viewed_user_id = viewed_user_id
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/" + world.viewed_user_id)
     if 'error' in result:
-        world.error = result
+        world.error = result["error"]
     else:
-        world.viewed_user = result
+        world.myprofile = result
 
 
       
