@@ -239,7 +239,12 @@ def getUserWithEmail(email):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
+    
+#error 400 handling
+@app.errorhandler(400)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 400)
+    
 # error 401 handling
 @app.errorhandler(401)
 def unauthorized(error):

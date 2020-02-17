@@ -5,7 +5,99 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from requests.auth import HTTPDigestAuth
 
 ## STEP DEFINITIONS
+# ID 001 - Create user
 
+
+@step('I am browsing the login page')
+def given_i_am_browsing_the_login_page(step):
+    world.user_id = -1
+@step('I clicked on the register button')
+def and_i_clicked_on_the_register_button(step):
+    pass
+@step('I fill in these information to my profile:')
+def when_i_fill_in_these_information_to_my_profile(step):
+    world.name = step.hashes[0]["Name"]
+    world.surname = step.hashes[0]["Surname"]
+    world.username = step.hashes[0]["Username"]
+    world.password = step.hashes[0]["Password"]
+    world.passwordconfirmation = step.hashes[0]["Password confirmation"]
+    world.email = step.hashes[0]["email"]
+    world.phone = step.hashes[0]["Phone Number"]
+    world.description = step.hashes[0]["Description"]
+  
+    result = createUserAPI(world.username, world.email, world.password)
+    assert result == "ok", \
+            "Got message = %s instead of %s" % (world.username, world.password)
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        response = result
+
+@step('the system should send me an email')
+def then_the_system_should_send_me_an_email(step):
+    pass #Will implement once api is created
+    
+@step('I should now be able to sign in to the app')
+def and_i_should_now_be_able_to_sign_in_to_the_app(step):
+    url = "https://were-board.herokuapp.com/email/" + world.email
+    response = getJSONfromAPI(url)
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        response = getJSONfromLoginAPI(email, password)
+        result = response 
+        if 'error' in result:
+            world.error = result["error"]
+        else:
+            world.message = result["data"]
+            expected_confirmation_message = "You were logged in"
+            assert world.message == expected_confirmation_message, \
+            "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
+            
+@step('My password doesn\'t respect the format')
+def and_my_password_doesn_t_respect_the_format(step):
+    pass
+    
+@step('the system should display an error message')
+def then_the_system_should_display_an_error_message(step):
+    assert world.error["error"] in ['length should be at least 6', 'Password should have at least one numeral', 'Password should have at least one uppercase letter', 'Password should have at least one lowercase letter', 'Password should have at least one of the symbols $@#'], \
+        "Got error = %s"  % (world.error["error"])
+    response = postJSONtoAPI
+@step('the username \'([^\']*)\' is already used')
+def and_the_username_group1_is_already_used(step, group1):
+    pass #API not implemented
+
+# ID_002 Login
+@step('I am already registered to the application with id = (\d+)')
+def given_i_am_registered_to_the_application(step, user_id):
+    world.user_id = user_id
+
+@step('I am not yet registered to the application')
+def given_i_am_not_yet_registered_to_the_application(step):
+    world.user_id = -1
+    
+@step('I login to the application with email = "([^"]*)" and password = "([^"]*)"')
+def when_i_login_to_the_application(step, email, password):
+    response = getJSONfromLoginAPI(email, password)
+    result = response 
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.message = result["data"]
+
+
+@step('The system logs me in and displays a confirmation message')
+def then_the_system_logs_me_in_and_displays_a_confirmation_message(step):
+    expected_confirmation_message = "You were logged in"
+    assert world.message == expected_confirmation_message, \
+        "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
+
+
+@step('the system does not log me in and displays a "([^"]*)" error message')
+def then_the_system_does_not_log_me_in_and_displays_an_error_message(step, message):
+    expected_error_message = message
+    assert world.error == expected_error_message, \
+        "Got error message = %s instead of %s" % (world.error, expected_error_message)
 
 
 #ID_003 Logout
@@ -18,14 +110,14 @@ def given_i_am_logged_in_the_application(step, user_id):
 def when_i_log_out_of_the_application(step):
     result = getJSONfromAPI("https://were-board.herokuapp.com/logout")
     if 'error' in result:
-        world.error = result
+        world.error = result['error']
     else:
-        world.message = result
+        world.message = result['data']
     
 @step('I should lose access to the application\'s features and redirect out')
 def then_i_should_lose_access_to_the_application_s_features_and_redirect_out(step):
     expected_confirmation_message = "You were logged out"
-    assert world.message["data"] == expected_confirmation_message, \
+    assert world.message == expected_confirmation_message, \
         "Got message = %s instead of %s"  % (world.message["data"], expected_confirmation_message)
 
 #ID_004 - View Personal Profile
@@ -42,7 +134,7 @@ def have_non_valid_user_id(step):
 def view_personal_profile(step):
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
-        world.error = result
+        world.error = result['error']
     else:
         world.myprofile = result
         
@@ -66,7 +158,7 @@ def assert_personal_profile(step):
 
 @step('the system displays an "([^"]*)" error message')
 def assert_error_404(step, expected):
-    assert world.error["error"] == expected, \
+    assert world.error == expected, \
         "Got error = %s instead of %s"  % (world.error["error"], expected)
 
 
@@ -242,11 +334,27 @@ def getJSONfromAPI(url):
     response = urllib.urlopen(url)
     data = json.loads(response.read())
     return data
-def getJSONfromLoginAPI(name, password):
+    
+def createUserAPI(name, email, password):
+    url = "https://were-board.herokuapp.com/user"
+
+    payload = "{\"name\":\""+name+"\",\"email\":\""+email+"\",\"password\":\""+password+"\"}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    return response.text.encode('utf8')
+    
+def getJSONfromLoginAPI(email, password):
     url = "https://were-board.herokuapp.com/login"
-    data = { "name": name, "password": password }
-    response = requests.post(url, data=json.dumps(data), headers={"Content-Type": "application/json"})
-    return response
+    payload = "{\"email\":\""+email+"\",\"password\":\""+password+"\"}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data = payload)
+    return json.loads(response.text.encode('utf8'))
     
 def putJSONtoAPI(url, jsonvar):
     payload = jsonvar
@@ -255,4 +363,15 @@ def putJSONtoAPI(url, jsonvar):
     }
 
     response = requests.request("PUT", url, headers=headers, data = payload)
+    return json.loads(response.text.encode('utf8'))
+    
+def deleteAPI(url):
+
+    payload = {}
+    headers = {
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("DELETE", url, headers=headers, data = payload)
+
     return json.loads(response.text.encode('utf8'))

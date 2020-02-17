@@ -10,7 +10,7 @@ Scenario: Changing name successfully
 
 Scenario: Changing password successfully
 	Given I am logged in the application as an user with id = "6" and email = "old@email.com"
-	When I enter a new password "123"
+	When I enter a new password "123Aa!"
 	Then the system saves my new password
 
 Scenario: Changing email to a new valid email

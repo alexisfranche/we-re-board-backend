@@ -47,7 +47,7 @@
      When I fill in these information to my profile:
       | Name  | Surname  | Username | Password | Password confirmation | email            | Phone Number | Description | 
       | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | amine@outlook.ca | 15143334444  | blabla      | 
-      And the username 'Amine' is already used
+      And the username 'Jack' is already used
      Then the system should display an error message
   
   Scenario: Register to the app with an email that is not valid
@@ -56,6 +56,7 @@
   
     Given I am browsing the login page
       And I clicked on the register button
+	  But the email is already used
      When I fill in these information to my profile:
       | Name  | Surname  | Username | Password | Password confirmation | email     | Phone Number | Description | 
       | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | email.com | 15143334444  | blabla      | 
