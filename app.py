@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort, make_response
+from flask import Flask, request, jsonify, abort, make_response, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,7 +45,7 @@ users_schema = UserSchema(many=True)
 
 @app.route('/', methods=['GET'])
 def hello():
-    return "<h1> were board backend!!! </h1>"
+    return "<h1> were board backend!!! </h1> You need to login first."
 
 # Create a user
 @app.route('/user', methods=['POST'])
@@ -64,38 +64,38 @@ def add_user():
 
 regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
-def checkEmail(email):  
-  
-    if(re.search(regex,email)):  
+def checkEmail(email):
+
+    if(re.search(regex,email)):
         print("valid password")
-    
-    else:  
+
+    else:
         abort(400, {'message': 'Invalid Email'})
 
 
-def password_check(passwd): 
-      
-    SpecialSym =['$', '@', '#', '%'] 
+def password_check(passwd):
+
+    SpecialSym =['$', '@', '#', '%']
     val = True
-      
-    if len(passwd) < 2: 
+
+    if len(passwd) < 2:
         abort(400, {'message': 'length should be at least 6'})
 
         val = False
-          
-    if not any(char.isdigit() for char in passwd): 
-        print('Password should have at least one numeral') 
+
+    if not any(char.isdigit() for char in passwd):
+        print('Password should have at least one numeral')
         abort(400, {'message': 'Password should have at least one numeral'})
 
         val = False
-          
-    if not any(char.isupper() for char in passwd): 
-        print('Password should have at least one uppercase letter') 
+
+    if not any(char.isupper() for char in passwd):
+        print('Password should have at least one uppercase letter')
         abort(400, {'message': 'Password should have at least one uppercase letter'})
 
         val = False
-          
-    if not any(char.islower() for char in passwd): 
+
+    if not any(char.islower() for char in passwd):
         print('Password should have at least one lowercase letter')
         abort(400, {'message': 'Password should have at least one lowercase letter'})
 
@@ -105,7 +105,7 @@ def password_check(passwd):
         print('Password should have at least one of the symbols $@#') 
         abort(400, {'message': 'Password should have at least one of the symbols $@#'})
         val = False
-    if val: 
+    if val:
         return val
 # Get all users
 @app.route('/user', methods=['GET'])
@@ -135,17 +135,22 @@ def user_detail(id):
     return user_schema.jsonify(user)
 
 # endpoint to login user
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login_user():
-    email = request.json['email']
-    password = request.json['password']
-    user = User.query.filter_by(email=email).first()
-    # error handling
-    if user is None:
-        abort(404)
-    elif not check_password_hash(user.password, password):
-        abort(401)
-    return make_response(jsonify({'data': 'You were logged in'}), 200)
+    if request.method == 'POST':
+        email = request.json['email']
+        password = request.json['password']
+        user = User.query.filter_by(email=email).first()
+        # error handling
+        if user is None:
+            flash('Invalid Credentials. Please try again.')
+            abort(404)
+        elif not check_password_hash(user.password, password):
+            flash('Invalid Credentials. Please try again.')
+            abort(401)
+        else:
+            flash('You were logged in')
+    return make_response(jsonify({'data': 'Please login'}), 200)
 
 # endpoint to logout user
 @app.route("/logout", methods=["GET"])
@@ -174,9 +179,9 @@ def user_update(id):
 def user_update_name(email):
     user = User.query.filter_by(email=email).first()
     name = request.json['name']
-    
+
     user.name = name
-    
+
     #dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
@@ -186,9 +191,9 @@ def user_update_name(email):
 def user_update_desc(email):
     user = User.query.filter_by(email=email).first()
     description = request.json['description']
-    
+
     user.description = description
-    
+
     #dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
@@ -207,7 +212,7 @@ def profile_update(id):
     user.email = email
     user.name = name
     user.description = description
-    
+
     #db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
