@@ -103,6 +103,7 @@ def password_check(passwd):
           
     if not any(char in SpecialSym for char in passwd): 
         print('Password should have at least one of the symbols $@#') 
+        abort(400, {'message': 'Password should have at least one of the symbols $@#'})
         val = False
     if val: 
         return val

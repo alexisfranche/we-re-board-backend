@@ -54,8 +54,8 @@
       And I clicked on the register button
 	  But the email is already used
      When I fill in these information to my profile:
-      | Name  | Surname  | Username | Password | Password confirmation | email    			 | Phone Number | Description | 
-      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | jackson@email.com	 | 15143334444  | blabla      | 
+      | Name  | Surname  | Username | Password | Password confirmation | email 	 | Phone Number | Description | 
+      | Amine | Alikacem | Amine    | bla3Bla; | bla3Bla;              | email	 | 15143334444  | blabla      | 
      Then the system should display an error message
   
   
