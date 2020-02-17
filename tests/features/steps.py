@@ -175,11 +175,10 @@ def given_i_enter_a_new_name_group1(step, group1):
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
         world.error = result
-        return error
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
-        data = "{\"name\":\""+group1+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\""+world.myoldprofile["password"]+"\", \"description\":\""+world.myoldprofile["description"]+"\"}"
+        data = "{\"name\":\""+group1+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\"bla3Bla$\", \"description\":\""+world.myoldprofile["description"]+"\"}"
         world.mynewprofile = putJSONtoAPI(url, data)
     
 @step('the system displays my new name on my profile page')
@@ -199,7 +198,7 @@ def then_the_system_displays_my_new_name_on_my_profile_page(step):
          
     #reset user to original state
     url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
-    data = "{\"name\":\""+world.myoldprofile["name"]+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\""+world.myoldprofile["password"]+"\", \"description\":\""+world.myoldprofile["description"]+"\"}"
+    data = "{\"name\":\""+world.myoldprofile["name"]+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\"bla3Bla$\", \"description\":\""+world.myoldprofile["description"]+"\"}"
     world.mynewprofile = putJSONtoAPI(url, data)
     
 @step('I enter a new password "([^"]*)"')
@@ -208,7 +207,6 @@ def when_i_enter_a_new_password_group1(step, group1):
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
         world.error = result
-        return error
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
@@ -232,7 +230,7 @@ def then_the_system_saves_my_new_password(step):
          
     #reset user to original state
     url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
-    data = "{\"name\":\""+world.myoldprofile["name"]+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\""+world.myoldprofile["password"]+"\", \"description\":\""+world.myoldprofile["description"]+"\"}"
+    data = "{\"name\":\""+world.myoldprofile["name"]+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\"bla3Bla$\", \"description\":\""+world.myoldprofile["description"]+"\"}"
     world.mynewprofile = putJSONtoAPI(url, data)
     
 @step('I enter a new email "([^"]*)"')
@@ -241,7 +239,6 @@ def when_i_enter_a_new_email_group1(step, group1):
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
         world.error = result
-        return error
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
@@ -273,7 +270,6 @@ def when_i_change_my_profile_description_to_group1(step, group1):
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
         world.error = result
-        return error
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
@@ -303,14 +299,14 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
     world.password = group1
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/profile/"+str(world.user_id))
     if 'error' in result:
-        world.error = result
-        return error
+        world.error = result["error"]
     else:
         world.myoldprofile = result
         url = "https://were-board.herokuapp.com/user/profile/"+str(world.user_id)
         data = "{\"name\":\""+world.myoldprofile["name"]+"\", \"email\":\""+world.myoldprofile["email"]+"\", \"password\":\""+group1+"\", \"description\":\""+world.myoldprofile["description"]+"\"}"
         world.mynewprofile = putJSONtoAPI(url, data)
-     
+        if'error' in world.mynewprofile:
+            world.error = world.mynewprofile["error"]
 @step('I should receive an error message')
 def then_i_should_receive_an_error_message(step):
     assert world.error == 'Invalid email or password',\

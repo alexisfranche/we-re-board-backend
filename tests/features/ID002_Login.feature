@@ -6,8 +6,8 @@
   
   Scenario: Login to the app (Normal Flow)
   
-    Given I am already registered to the application with id = 26
-     When I login to the application with email = "amine@outlook.ca" and password = "bla3Bla;"
+    Given I am already registered to the application with id = 301
+     When I login to the application with email = "login@email.ca" and password = "bla3Bla$"
      Then the system logs me in and displays a confirmation message
   
   Scenario: Login to the app with an email that hasn't been registered (Error Flow)
@@ -18,8 +18,8 @@
   
   Scenario: Login to the app with an incorrect password (Error Flow)
   
-    Given I am already registered to the application with id = 26
-     When I login to the application with email = "amine@outlook.ca" and password = "bla4Pla;"
+    Given I am already registered to the application with id = 301
+     When I login to the application with email = "login@email.ca" and password = "bla4Pla$"
      Then the system does not log me in and displays a "Invalid Credentials. Please try again." error message
   
   

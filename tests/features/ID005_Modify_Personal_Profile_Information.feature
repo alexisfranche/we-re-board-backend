@@ -9,21 +9,21 @@ Scenario: Changing name successfully
 	Then the system displays my new name on my profile page 
 
 Scenario: Changing password successfully
-	Given I am logged in the application as an user with id = "6" and email = "old@email.com"
-	When I enter a new password "123Aa!"
+	Given I am logged in the application as an user with id = "6"
+	When I enter a new password "bla3Bla$new"
 	Then the system saves my new password
 
 Scenario: Changing email to a new valid email
-	Given I am logged in the application as an user with id = "6" and email = "old@email.com"
+	Given I am logged in the application as an user with id = "6"
 	When I enter a new email "newemail@email.com"
 	Then The system saves my email
         
 Scenario: Changing profile description
-	Given I am logged in the application as an user with id = "6" and email = "old@email.com"
+	Given I am logged in the application as an user with id = "6"
 	When I change my profile description to "Great"
 	Then The system saves my new profile description
 
 Scenario: Changing password fails due to invalid password - Error Flow
-	Given I am logged in the application as an user with id = "6" and email = "old@email.com"
+	Given I am logged in the application as an user with id = "6"
 	When I enter a new invalid password "badpassword"
 	Then I should receive an error message
