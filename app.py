@@ -43,6 +43,50 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+#Event Class/Model
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    address = db.Column(db.String(200))
+    description = db.Column(db.String(200))
+    datetime = db.Column(db.String(200))
+    event_manager_id = db.Column(db.Integer)
+
+    def __init__(self, name, address, description, datetime, event_manager_id):
+        self.name = name
+        self.address = address
+        self.description = description
+        self.datetime = datetime
+        self.event_manager_id = event_manager_id
+
+# Event Schema
+class EventSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'address', 'description', 'datetime', 'event_manager_id')
+
+# Init Schema Event
+event_schema = EventSchema()
+events_schema = EventSchema(many=True)
+
+#Event-User Class/Model #THIS CLASS ESTABLISHES A EVENT TO USER RELATIONSHIP
+class Event_User(db.Model):
+    event_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, event_id, user_id):
+        self.event_id = event_id
+        self.user_id = user_id
+
+# Event Schema
+class Event_UserSchema(ma.Schema):
+    class Meta:
+        fields = ('event_id', 'user_id')
+
+# Init Schema User
+event_user_relationship_schema =  Event_UserSchema()
+event_user_relationships_schema = Event_UserSchema(many=True)
+
+
 @app.route('/', methods=['GET'])
 def hello():
     return "<h1> were board backend!!! </h1> You need to login first."
@@ -61,6 +105,34 @@ def add_user():
     db.session.commit()
 
     return user_schema.jsonify(new_user)
+
+# Create an event
+@app.route('/event', methods=['POST'])
+def add_event():
+    name = request.json['name']
+    address = request.json['address']
+    datetime = request.json['datetime']
+    description = request.json['description']
+    event_manager_id = request.json['event_manager_id']
+
+    new_event = Event(name, address, description, datetime, event_manager_id)
+
+    db.session.add(new_event)
+    db.session.commit()
+
+    return event_schema.jsonify(new_event)
+
+#Add a user to an event
+@app.route('/join', methods=['POST'])
+def add_event_user():
+    event_id = request.json['event_id']
+    user_id = request.json['user_id']
+    new_event_user = Event_User(event_id, user_id)
+
+    db.session.add(new_event_user)
+    db.session.commit()
+
+    return event_user_relationship_schema.jsonify(new_event_user)
 
 regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
