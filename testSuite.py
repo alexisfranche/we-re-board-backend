@@ -14,7 +14,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_login_page_loads(self):
         tester = app.test_client(self)
         response = tester.get('/login')
-        self.assertIn(b'Please login', response.data)
+        self.assertIn(b'You were logged in.', response.data)
 
     # Ensure login behaves correctly with correct credentials
     def test_correct_login(self):
