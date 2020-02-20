@@ -215,19 +215,19 @@ def login_user():
         user = User.query.filter_by(email=email).first()
         # error handling
         if user is None:
-            flash('Invalid Credentials. Please try again.')
-            abort(404)
-        elif not check_password_hash(user.password, password):
-            flash('Invalid Credentials. Please try again.')
+            # flash('Invalid Credentials. Please try again.')
             abort(401)
-        else:
-            flash('You were logged in')
-    return make_response(jsonify({'data': 'Please login'}), 200)
+        elif not check_password_hash(user.password, password):
+            # flash('Invalid Credentials. Please try again.')
+            abort(401)
+        # else:
+            #flash('You were logged in')
+    return make_response(jsonify({'data': 'You were logged in.'}), 200)
 
 # endpoint to logout user
 @app.route("/logout", methods=["GET"])
 def logout_user():
-    return make_response(jsonify({'data': 'You were logged out'}), 200)
+    return make_response(jsonify({'data': 'You were logged out.'}), 200)
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])

@@ -14,7 +14,7 @@
   
     Given I am not yet registered to the application
      When I login to the application with email = "notRegistered@outlook.ca" and password = "bla3Bla;"
-     Then the system does not log me in and displays a "Not found" error message
+     Then the system does not log me in and displays a "Invalid Credentials. Please try again." error message
   
   Scenario: Login to the app with an incorrect password (Error Flow)
   
