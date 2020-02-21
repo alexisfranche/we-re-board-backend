@@ -18,6 +18,6 @@ Then the system displays some information about the event:
 
 Given I am logged in as a user
 When I select the 'Manage my Events' tab
-Then a "No active event exist. Please try again later" message is issued
+Then a 'No active event exist. Please try again later' message is issued
 
     
