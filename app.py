@@ -179,6 +179,7 @@ def password_check(passwd):
         val = False
     if val:
         return val
+
 # Get all users
 @app.route('/user', methods=['GET'])
 def get_users():
@@ -228,6 +229,23 @@ def login_user():
 @app.route("/logout", methods=["GET"])
 def logout_user():
     return make_response(jsonify({'data': 'You were logged out.'}), 200)
+
+# endpoint to modify an event
+@app.route('/event/<id>', methods=['PUT'])
+def event_update(id):
+    event = Event.query.get(id)
+    name = request.json['name']
+    address = request.json['address']
+    datetime = request.json['datetime']
+    description = request.json['description']
+
+    if not name is None : event.name = name
+    if not address is None : event.address = address
+    if not datetime is None : event.datetime = request.json['datetime']
+    if not description is None : event.description = description
+
+    db.session.commit()
+    return event_schema.jsonify(event)
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])

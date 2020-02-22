@@ -39,7 +39,7 @@ class FlaskTestCase(unittest.TestCase):
         #         follow_redirects=True
         #         )
         response = tester.get('/logout', follow_redirects=True)
-        self.assertIn(b'You were logged out', response.data)
+        self.assertIn(b'You were logged out.', response.data)
 
     # Ensure that main page requires user login
     def test_main_route_requires_login(self):
