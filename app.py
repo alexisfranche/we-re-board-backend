@@ -187,6 +187,13 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
+# Get all events
+@app.route('/event', methods=['GET'])
+def get_users():
+    all_events = Event.query.all()
+    result = users_schema.dump(all_events)
+    return jsonify(result)
+
 # endpoint to get profile info by id (returns everything about user)
 @app.route("/user/profile/<id>", methods=["GET"])
 def profile_detail(id):
