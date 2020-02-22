@@ -189,7 +189,7 @@ def get_users():
 
 # Get all events
 @app.route('/event', methods=['GET'])
-def get_users():
+def get_events():
     all_events = Event.query.all()
     result = users_schema.dump(all_events)
     return jsonify(result)
