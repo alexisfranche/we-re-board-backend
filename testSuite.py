@@ -14,7 +14,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_login_page_loads(self):
         tester = app.test_client(self)
         response = tester.get('/login')
-        self.assertIn(b'Please login', response.data)
+        self.assertIn(b'You were logged in.', response.data)
 
     # Ensure login behaves correctly with correct credentials
     def test_correct_login(self):
@@ -39,7 +39,7 @@ class FlaskTestCase(unittest.TestCase):
         #         follow_redirects=True
         #         )
         response = tester.get('/logout', follow_redirects=True)
-        self.assertIn(b'You were logged out', response.data)
+        self.assertIn(b'You were logged out.', response.data)
 
     # Ensure that main page requires user login
     def test_main_route_requires_login(self):
