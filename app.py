@@ -246,10 +246,10 @@ def event_update(id):
     datetime = request.json['datetime']
     description = request.json['description']
 
-    if not name is None : event.name = name
-    if not address is None : event.address = address
-    if not datetime is None : event.datetime = request.json['datetime']
-    if not description is None : event.description = description
+    if not name == "" : event.name = name
+    if not address == "" : event.address = address
+    if not datetime == "" : event.datetime = request.json['datetime']
+    if not description == "" : event.description = description
 
     db.session.commit()
     return event_schema.jsonify(event)
