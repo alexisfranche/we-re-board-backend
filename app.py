@@ -179,11 +179,19 @@ def password_check(passwd):
         val = False
     if val:
         return val
+
 # Get all users
 @app.route('/user', methods=['GET'])
 def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
+    return jsonify(result)
+
+# Get all events
+@app.route('/event', methods=['GET'])
+def get_events():
+    all_events = Event.query.all()
+    result = users_schema.dump(all_events)
     return jsonify(result)
 
 # endpoint to get profile info by id (returns everything about user)
@@ -215,19 +223,36 @@ def login_user():
         user = User.query.filter_by(email=email).first()
         # error handling
         if user is None:
-            flash('Invalid Credentials. Please try again.')
-            abort(404)
-        elif not check_password_hash(user.password, password):
-            flash('Invalid Credentials. Please try again.')
+            # flash('Invalid Credentials. Please try again.')
             abort(401)
-        else:
-            flash('You were logged in')
-    return make_response(jsonify({'data': 'Please login'}), 200)
+        elif not check_password_hash(user.password, password):
+            # flash('Invalid Credentials. Please try again.')
+            abort(401)
+        # else:
+            #flash('You were logged in')
+    return make_response(jsonify({'data': 'You were logged in.'}), 200)
 
 # endpoint to logout user
 @app.route("/logout", methods=["GET"])
 def logout_user():
-    return make_response(jsonify({'data': 'You were logged out'}), 200)
+    return make_response(jsonify({'data': 'You were logged out.'}), 200)
+
+# endpoint to modify an event
+@app.route('/event/<id>', methods=['PUT'])
+def event_update(id):
+    event = Event.query.get(id)
+    name = request.json['name']
+    address = request.json['address']
+    datetime = request.json['datetime']
+    description = request.json['description']
+
+    if not name == "" : event.name = name
+    if not address == "" : event.address = address
+    if not datetime == "" : event.datetime = request.json['datetime']
+    if not description == "" : event.description = description
+
+    db.session.commit()
+    return event_schema.jsonify(event)
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
