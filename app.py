@@ -111,7 +111,7 @@ def add_user():
 def add_event():
     name = request.json['name']
     address = request.json['address']
-    datetime = request.json['datetime']
+    datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
     event_manager_id = request.json['event_manager_id']
 

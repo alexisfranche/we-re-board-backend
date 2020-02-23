@@ -93,7 +93,7 @@ def when_i_login_to_the_application(step, email, password):
 
 @step('The system logs me in and displays a confirmation message')
 def then_the_system_logs_me_in_and_displays_a_confirmation_message(step):
-    expected_confirmation_message = "You were logged in"
+    expected_confirmation_message = "You were logged in."
     assert world.message == expected_confirmation_message, \
         "Got message = %s instead of %s" % (world.message, expected_confirmation_message)
 
@@ -121,9 +121,9 @@ def when_i_log_out_of_the_application(step):
     
 @step('I should lose access to the application\'s features and redirect out')
 def then_i_should_lose_access_to_the_application_s_features_and_redirect_out(step):
-    expected_confirmation_message = "You were logged out"
+    expected_confirmation_message = "You were logged out."
     assert world.message == expected_confirmation_message, \
-        "Got message = %s instead of %s"  % (world.message["data"], expected_confirmation_message)
+        "Got message = %s instead of %s"  % (world.message, expected_confirmation_message)
 
 #ID_004 - View Personal Profile
 @step('I am logged in as an user with id = (\d+)')
