@@ -9,6 +9,7 @@ script:
   - cd /usr/src
   - sudo wget https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tgz
   - sudo tar xzf Python-2.7.16.tgz
+  - cd /home/travis/build/alexisfranche/we-re-board-backend
   - pytest testSuite.py
   - cd tests
   - lettuce
