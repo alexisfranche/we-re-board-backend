@@ -1,20 +1,14 @@
 language: python
 python:
-  - "2.6"
-  - "2.7"
   - "3.6"
-
-matrix:
-  allow_failures:
-    - python: "2.6"
-    - python: "2.7"
-
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  - pip install gunicorn==20.0.4
 # command to run tests
-script:
+script: 
+  - cd /usr/src
+  - sudo wget https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tgz
+  - sudo tar xzf Python-2.7.16.tgz
   - pytest testSuite.py
   - cd tests
   - lettuce
