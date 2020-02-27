@@ -1,5 +1,5 @@
 from lettuce import *
-import urllib, json
+import urllib.request, json
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from requests.auth import HTTPDigestAuth
@@ -351,8 +351,8 @@ def view_user_profile(step, viewed_user_id):
       
 ##HELPER FUCNTIONS
 def getJSONfromAPI(url):
-    response = urllib.urlopen(url)
-    data = json.loads(response.read())
+    response = requests.get(url)
+    data = response.json()
     return data
     
 def createUserAPI(name, email, password):
