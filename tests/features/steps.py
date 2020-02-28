@@ -310,7 +310,33 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
 def then_i_should_receive_an_error_message(step):
     assert world.error == 'Invalid email or password',\
         "Got error = %s"  % (world.error)
+
+#ID_007
+@step(u'Given I am logged in as a user')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
+@step(u'And I have navigated to the \'Find Events\' page')
+def and_i_have_navigated_to_the_group1_page(step):
+    pass
+@step(u'When I select the \'([^\']*)\' option')
+def when_i_select_the_group1_option(step, group1):
+    world.event_browse_option = group1
+@step(u'Then the system displays all the active events in a list by categories with the following information:')
+def then_the_system_displays_all_the_active_events_in_a_list_by_categories_with_the_following_information(step):
+    eventlist = getJSONfromAPI("https://were-board.herokuapp.com/event")#change this to match API once implemented
+    assert eventlist[0]['name'] == step.hashes[0]["Name"],\
+        "Got name = %s instead of %s"  % (eventlist[0]['name'], step.hashes[0]["Name"])
     
+    assert eventlist[0]['address'] == step.hashes[0]["Address"],\
+        "Got address = %s instead of %s"  % (eventlist[0]['address'], step.hashes[0]["Address"])
+@step(u'But  there are no active events exist in the system database')
+def but_there_are_no_active_events_exist_in_the_system_database(step):
+    assert False, 'This step must be implemented'
+@step(u'Then the system display a "([^"]*)" error message')
+def then_the_system_display_a_group1_error_message(step, group1):
+    assert False, 'This step must be implemented'
+
+  
 # ID_010 View selected user profile
 
 @step('I am a user of We\'re Board with id=(\d+)')

@@ -48,13 +48,15 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     address = db.Column(db.String(200))
+    game = db.Column(db.String(100))
     description = db.Column(db.String(200))
     datetime = db.Column(db.String(200))
     event_manager_id = db.Column(db.Integer)
 
-    def __init__(self, name, address, description, datetime, event_manager_id):
+    def __init__(self, name, address, game, description, datetime, event_manager_id):
         self.name = name
         self.address = address
+        self.game = game
         self.description = description
         self.datetime = datetime
         self.event_manager_id = event_manager_id
@@ -62,7 +64,7 @@ class Event(db.Model):
 # Event Schema
 class EventSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'address', 'description', 'datetime', 'event_manager_id')
+        fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'event_manager_id')
 
 # Init Schema Event
 event_schema = EventSchema()
@@ -111,6 +113,7 @@ def add_user():
 def add_event():
     name = request.json['name']
     address = request.json['address']
+    game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
     event_manager_id = request.json['event_manager_id']
@@ -191,7 +194,7 @@ def get_users():
 @app.route('/event', methods=['GET'])
 def get_events():
     all_events = Event.query.all()
-    result = users_schema.dump(all_events)
+    result = events_schema.dump(all_events)
     return jsonify(result)
 
 # endpoint to get profile info by id (returns everything about user)
@@ -243,11 +246,13 @@ def event_update(id):
     event = Event.query.get(id)
     name = request.json['name']
     address = request.json['address']
+    game = request.json['game']
     datetime = request.json['datetime']
     description = request.json['description']
 
     if not name == "" : event.name = name
     if not address == "" : event.address = address
+    if not game == "" : event.game = game
     if not datetime == "" : event.datetime = request.json['datetime']
     if not description == "" : event.description = description
 
