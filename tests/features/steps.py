@@ -1,5 +1,5 @@
 from lettuce import *
-import urllib.request, json
+import urllib, json
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from requests.auth import HTTPDigestAuth
@@ -482,7 +482,45 @@ def then_the_system_display_a_group1_error_message(step, group1):
     assert world.error == group1, \
         "Got error = %s" % (world.error)
 
-      
+#ID_016 Modify an Event
+
+@step('Given I am logged in as the Event Manager with id=(\d+)')
+def given_i_am_logged_in_as_the_event_manager(step, id):
+    world.user_id=id
+    pass
+
+@step('And I have navigated to the \'Manage my Events\' page')  
+def and_i_have_navigated_to_manage_my_events_page(step):
+    pass  
+
+@step('When I select the Modify button next to event with id=(\d+)')
+def when_i_select_modify(step, event_id):
+    world.event_id=event_id
+    pass
+    
+@step('Then I can edit the events information')
+def then_i_can_edit_info(step):
+    world.old_event= getJSONfromAPI("https://were-board.herokuapp.com/event/"+str(world.event_id))
+    if 'error' in world.old_event:
+        world.error= world.old_event["error"]
+    else: 
+        if(world.old_event["name"]!= "Poker1"):
+            world.new_name="Poker1"
+        else:
+            world.new_name="Poker2"
+        
+        url= "https://were-board.herokuapp.com/event/"+str(world.event_id)
+        data="{\"name\":\""+world.new_name+"\", \"address\":\""+world.old_event["address"]+"\", \"game\":\""+world.old_event["game"]+"\", \"datetime\":\""+world.old_event["datetime"]+"\", \"description\":\""+world.old_event["description"]+"\"}"
+        world.new_event= putJSONtoAPI(url, data)
+
+@step('And when I press the \'Save\' button the Event\'s information is updated')
+def event_info_updated(step):
+    assert world.old_event["name"] != world.new_event["name"]
+ 
+
+
+
+
 ##HELPER FUCNTIONS
 def getJSONfromAPI(url):
     response = requests.get(url)
