@@ -383,6 +383,52 @@ def view_user_profile(step, viewed_user_id):
     else:
         world.myprofile = result
 
+        
+#ID_012 Create Event
+@step(u'Given I am logged in as a user')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
+
+
+@step(u'And I have navigated to the \'Create Event\' page')
+def and_i_have_navigated_to_the_create_event_page(step):
+    pass
+
+@step(u'When I create an event with my information')
+def when_i_select_the_create_event_option(step, info):
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.eventlist = result  # change this to match API once implemented
+
+
+@step(u'Then should create my event and I should see the event under hosting')
+def then_the_system_displays_my_event_in_a_list_with_the_other_evvents(step):
+    eventlist = world.eventlist
+    for i in range(len(eventlist)):
+        assert eventlist[i]['name'] == step.hashes[i]["Name"], \
+            "Got name = %s instead of %s" % (eventlist[i]['name'], step.hashes[i]["Name"])
+        assert eventlist[i]['game'] == step.hashes[i]["Game"], \
+            "Got game = %s instead of %s for %s" % (eventlist[i]['game'], step.hashes[i]["Game"], eventlist[i]['name'])
+        assert eventlist[i]['datetime'] == step.hashes[i]["Date"], \
+            "Got date = %s instead of %s for %s" % (
+            eventlist[i]['datetime'], step.hashes[i]["Date"], eventlist[i]['name'])
+        assert eventlist[i]['address'] == step.hashes[i]["Address"], \
+            "Got address = %s instead of %s for %s" % (
+            eventlist[i]['address'], step.hashes[i]["Address"], eventlist[i]['name'])
+        assert eventlist[i]['description'] == step.hashes[i]["Description"], \
+             "Got description = %s instead of %s for %s" %(eventlist[i]['description'], eventlist[i]["Description"],eventlist[i]['name'])
+
+
+@step(u'But we created an event without specifying an event name as a normal user')
+def but_we_created_an_event_without_specifying_an_event_name_as_a_normal_user(step):
+    pass
+
+@step(u'Then the system displays a "([^"]*)" error message')
+def then_the_system_display_a_group1_error_message(step, group1):
+    assert world.error == group1, \
+        "Got error = %s" % (world.error)
 
       
 ##HELPER FUCNTIONS
