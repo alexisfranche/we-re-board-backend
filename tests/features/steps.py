@@ -430,29 +430,26 @@ def when_i_select_the_create_event_option(step, info):
     if 'error' in result:
         world.error = result["error"]
     else:
-        world.eventlist = result  # change this to match API once implemented
+        world.event = result  # change this to match API once implemented
 
 
-@step(u'Then should create my event and I should see the event under hosting')
-def then_the_system_displays_my_event_in_a_list_with_the_other_evvents(step):
-    eventlist = world.eventlist
-    for i in range(len(eventlist)):
-        assert eventlist[i]['name'] == step.hashes[i]["Name"], \
-            "Got name = %s instead of %s" % (eventlist[i]['name'], step.hashes[i]["Name"])
-        assert eventlist[i]['game'] == step.hashes[i]["Game"], \
-            "Got game = %s instead of %s for %s" % (eventlist[i]['game'], step.hashes[i]["Game"], eventlist[i]['name'])
-        assert eventlist[i]['datetime'] == step.hashes[i]["Date"], \
-            "Got date = %s instead of %s for %s" % (
-            eventlist[i]['datetime'], step.hashes[i]["Date"], eventlist[i]['name'])
-        assert eventlist[i]['address'] == step.hashes[i]["Address"], \
-            "Got address = %s instead of %s for %s" % (
-            eventlist[i]['address'], step.hashes[i]["Address"], eventlist[i]['name'])
-        assert eventlist[i]['description'] == step.hashes[i]["Description"], \
-             "Got description = %s instead of %s for %s" %(eventlist[i]['description'], eventlist[i]["Description"],eventlist[i]['name'])
+@step(u'Then the system displays my event')
+def then_the_system_displays_my_event(step):
+    event = world.event
+    assert event['name'] == step.hashes["Name"],\
+        "Got name = %s instead of %s"  % (event['name'], step.hashes["Name"])
+    assert event['game'] == step.hashes["Game"],\
+        "Got game = %s instead of %s for %s"  % (event['game'], step.hashes["Game"], event['name'])
+    assert event['datetime'] == step.hashes["Date"],\
+        "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
+    assert event['address'] == step.hashes["Address"],\
+        "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
+    assert event['description'] == step.hashes["Description"],\
+        "Got description = %s instead of %s for %s"  % (event['description'], step.hashes["Description"], event['name'])
 
 
-@step(u'But we created an event without specifying an event name as a normal user')
-def but_we_created_an_event_without_specifying_an_event_name_as_a_normal_user(step):
+@step(u'But the user is suspended')
+def but_the_user_is_suspended(step):
     pass
 
 @step(u'Then the system displays a "([^"]*)" error message')
