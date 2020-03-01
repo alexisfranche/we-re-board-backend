@@ -346,7 +346,37 @@ def then_the_system_display_a_group1_error_message(step, group1):
     assert world.error == group1,\
         "Got error = %s"  % (world.error)
 
-  
+
+# ID_008 Access specific event
+
+@step(u'Given I am logged in as a user')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
+@step(u'And I have navigated to the \'Find Events\' page')
+def and_i_have_navigated_to_the_group1_page(step):
+    pass
+@step(u'When I select an event to access the selected event page')
+def when_i_select_the_event(step):
+    world.event_id = 5
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event" + world.event_id)
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.event = result#change this to match API once implemented
+@step(u'Then the system displays all the details about the event')
+def then_the_system_displays_the_event_with_the_following_information(step):
+    event = world.event
+    assert event['name'] == step.hashes["Name"],\
+        "Got name = %s instead of %s"  % (event['name'], step.hashes["Name"])
+    assert event['game'] == step.hashes["Game"],\
+        "Got game = %s instead of %s for %s"  % (event['game'], step.hashes["Game"], event['name'])
+    assert event['datetime'] == step.hashes["Date"],\
+        "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
+    assert event['address'] == step.hashes["Address"],\
+        "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
+
+
+
 # ID_010 View selected user profile
 
 @step('I am a user of We\'re Board with id=(\d+)')
