@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, abort, make_response, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from marshmallow_enum import EnumField
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import enum
 import os
 import re
 
@@ -43,6 +45,13 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+#Event status enumeration
+class EventStatus(enum.Enum):
+    Upcoming = "upcoming"
+    Finished = "finished"
+    Cancelled = "cancelled"
+    Rescheduled = "rescheduled"
+
 #Event Class/Model
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,20 +60,23 @@ class Event(db.Model):
     game = db.Column(db.String(100))
     description = db.Column(db.String(200))
     datetime = db.Column(db.String(200))
+    status = db.Column(db.Enum(EventStatus))
     event_manager_id = db.Column(db.Integer)
 
-    def __init__(self, name, address, game, description, datetime, event_manager_id):
+    def __init__(self, name, address, game, description, datetime, status, event_manager_id):
         self.name = name
         self.address = address
         self.game = game
         self.description = description
         self.datetime = datetime
+        self.status = status
         self.event_manager_id = event_manager_id
 
 # Event Schema
 class EventSchema(ma.Schema):
+    status = EnumField(EventStatus, by_value=True)
     class Meta:
-        fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'event_manager_id')
+        fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'status', 'event_manager_id')
 
 # Init Schema Event
 event_schema = EventSchema()
@@ -116,9 +128,10 @@ def add_event():
     game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
+    status = EventStatus.Upcoming
     event_manager_id = request.json['event_manager_id']
 
-    new_event = Event(name, address, description, datetime, event_manager_id)
+    new_event = Event(name, address, description, datetime, status, event_manager_id)
 
     db.session.add(new_event)
     db.session.commit()
@@ -247,13 +260,15 @@ def event_update(id):
     name = request.json['name']
     address = request.json['address']
     game = request.json['game']
-    datetime = request.json['datetime']
+    datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
 
     if not name == "" : event.name = name
     if not address == "" : event.address = address
     if not game == "" : event.game = game
-    if not datetime == "" : event.datetime = request.json['datetime']
+    if not datetime == "" :
+        event.datetime = request.json['datetime']
+        event.status = EventStatus.Rescheduled
     if not description == "" : event.description = description
 
     db.session.commit()
@@ -318,6 +333,25 @@ def profile_update(id):
     #db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
+
+# endpoint to cancel an event
+@app.route('/event/<id>', methods=["PUT"])
+def event_cancel(id):
+    event = Event.query.get(id)
+    event.status = EventStatus.Cancelled
+    db.session.commit()
+    
+    return event_schema.jsonify(event)
+
+# endpoint to delete an event
+@app.route('/event/<id>', methods=["DELETE"])
+def event_delete(id):
+    event = Event.query.get(id)
+    db.session.delete(event)
+    db.session.commit()
+
+    return event_schema.jsonify(event)
+
 
 # endpoint to delete user
 @app.route("/user/<id>", methods=["DELETE"])
