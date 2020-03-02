@@ -60,7 +60,8 @@ class Event(db.Model):
     game = db.Column(db.String(100))
     description = db.Column(db.String(200))
     datetime = db.Column(db.String(200))
-    status = db.Column(db.Enum(EventStatus))
+    #status = db.Column(db.Enum(EventStatus))
+    status = db.Column(db.String(100))
     event_manager_id = db.Column(db.Integer)
 
     def __init__(self, name, address, game, description, datetime, status, event_manager_id):
@@ -75,7 +76,7 @@ class Event(db.Model):
 
 # Event Schema
 class EventSchema(ma.Schema):
-    status = EnumField(EventStatus)
+    #status = EnumField(EventStatus)
     class Meta:
         #model = Event
         fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'status', 'event_manager_id')
@@ -131,7 +132,7 @@ def add_event():
     game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = EventStatus.Upcoming
+    status = EventStatus.Upcoming.value
     event_manager_id = request.json['event_manager_id']
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
@@ -272,7 +273,7 @@ def event_update(id):
     if not game == "" : event.game = game
     if not datetime == "" :
         event.datetime = request.json['datetime']
-        event.status = EventStatus.Rescheduled
+        event.status = EventStatus.Rescheduled.value
     if not description == "" : event.description = description
 
     db.session.commit()
@@ -342,7 +343,7 @@ def profile_update(id):
 @app.route('/event/<id>', methods=["PUT"])
 def event_cancel(id):
     event = Event.query.get(id)
-    event.status = EventStatus.Cancelled
+    event.status = EventStatus.Cancelled.value
     db.session.commit()
     
     return event_schema.jsonify(event)
