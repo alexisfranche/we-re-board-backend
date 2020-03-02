@@ -60,7 +60,7 @@ class Event(db.Model):
     game = db.Column(db.String(100))
     description = db.Column(db.String(200))
     datetime = db.Column(db.String(200))
-    status = db.Column(Enum(EventStatus))
+    status = db.Column(enum.Enum(EventStatus))
     event_manager_id = db.Column(db.Integer)
 
     def __init__(self, name, address, game, description, datetime, status, event_manager_id):
