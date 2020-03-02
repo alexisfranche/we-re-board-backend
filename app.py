@@ -76,7 +76,9 @@ class Event(db.Model):
 class EventSchema(ma.Schema):
     status = EnumField(EventStatus, by_value=True)
     class Meta:
-        fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'status', 'event_manager_id')
+        model = Event
+        sqla_session = session
+        #fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'status', 'event_manager_id')
 
 # Init Schema Event
 event_schema = EventSchema()
