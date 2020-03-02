@@ -1,7 +1,6 @@
 from app import app
 import unittest
 
-
 class FlaskTestCase(unittest.TestCase):
 
     # Ensure that Flask was set up correctly
