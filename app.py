@@ -334,6 +334,16 @@ def profile_update(id):
     db.session.commit()
     return user_schema.jsonify(user)
 
+# endpoint to cancel an event
+@app.route('/event/<id>', methods=['PUT'])
+def event_update(id):
+    event = Event.query.get(id)
+    event.status = EventStatus.Cancelled
+
+    db.session.commit()
+    return event_schema.jsonify(event)
+
+
 # endpoint to delete user
 @app.route("/user/<id>", methods=["DELETE"])
 def user_delete(id):
