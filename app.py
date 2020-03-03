@@ -214,6 +214,15 @@ def get_events():
     result = events_schema.dump(all_events)
     return jsonify(result)
 
+# endpoint to get event info by id (returns everything about event)
+@app.route("/event/<id>", methods=["GET"])
+def event_detail(id):
+    event = Event.query.get(id)
+    # error handling
+    if event is None:
+        abort(404)
+    return event_schema.jsonify(event)
+
 # endpoint to get profile info by id (returns everything about user)
 @app.route("/user/profile/<id>", methods=["GET"])
 def profile_detail(id):
