@@ -131,7 +131,7 @@ def add_event():
     game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = EventStatus.Upcoming.value
+    status = "Upcoming"
     event_manager_id = request.json['event_manager_id']
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
@@ -281,7 +281,7 @@ def event_update(id):
     if not game == "" : event.game = game
     if not datetime == "" :
         event.datetime = request.json['datetime']
-        event.status = EventStatus.Rescheduled.value
+        event.status = "Rescheduled"
     if not description == "" : event.description = description
 
     db.session.commit()
