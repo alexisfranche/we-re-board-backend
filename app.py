@@ -135,10 +135,16 @@ def add_event():
     event_manager_id = request.json['event_manager_id']
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
-    new_event = Event(name, address, description, datetime, status, event_manager_id)
-
-    db.session.add(new_event)
-    db.session.commit()
+    try:
+        new_event = Event(name, address, description, datetime, status, event_manager_id)
+    except:
+        abort(400)
+    
+    try:
+        db.session.add(new_event)
+        db.session.commit()
+    except:
+        abort(401)
 
     return event_schema.jsonify(new_event)
 
