@@ -275,7 +275,7 @@ def logout_user():
 
 @app.route('/event/manager/<manager_id>', methods=['GET'])
 def get_Events_By_Manager(manager_id):
-    events = Event.query.filter_by(manager_id=manager_id)
+    events = Event.query.filter_by(event_manager_id=manager_id)
     result = events_schema.dump(events)
     return jsonify(result)
 
