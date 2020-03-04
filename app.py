@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow_enum import EnumField
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import DBAPIError, SQLAlchemyError
 
 import enum
 import os
@@ -138,8 +138,8 @@ def add_event():
     #new_event = Event(name, address, description, datetime, event_manager_id)
     try:
         new_event = Event(name, address, description, datetime, status, event_manager_id)
-    except DBAPIError as e:
-        abort(400, {'message': e.params})
+    except SQLAlchemyError as e:
+        abort(400, {'message': e.arg[0]})
     
     try:
         db.session.add(new_event)
