@@ -131,7 +131,7 @@ def add_event():
     game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = "Upcoming"
+    status = request.json['status']
     event_manager_id = request.json['event_manager_id']
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
