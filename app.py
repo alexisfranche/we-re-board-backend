@@ -273,6 +273,12 @@ def login_user():
 def logout_user():
     return make_response(jsonify({'data': 'You were logged out.'}), 200)
 
+@app.route('/event/manager/<manager_id>', methods=['GET'])
+def get_Events_By_Manager(manager_id):
+    events = Event.query.filter_by(manager_id=manager_id)
+    result = events_schema.dump(events)
+    return jsonify(result)
+
 # endpoint to modify an event
 @app.route('/event/<id>', methods=['PUT'])
 def event_update(id):
