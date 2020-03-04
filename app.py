@@ -137,7 +137,7 @@ def add_event():
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
     try:
-        new_event = Event(name, address, description, datetime, status, event_manager_id)
+        new_event = Event(name, address, game, description, datetime, status, event_manager_id)
     except SQLAlchemyError as e:
         abort(400, {'message': e.arg[0]})
     
