@@ -64,8 +64,8 @@ class Event(db.Model):
     status = db.Column(db.String(100))
     event_manager_id = db.Column(db.Integer)
 
-    def __init__(self, name, address, game, description, datetime, status, event_manager_id):
     #def __init__(self, name, address, game, description, datetime, event_manager_id):
+    def __init__(self, name, address, game, description, datetime, status, event_manager_id):
         self.name = name
         self.address = address
         self.game = game
