@@ -139,7 +139,7 @@ def add_event():
     try:
         new_event = Event(name, address, description, datetime, status, event_manager_id)
     except DBAPIError as e:
-        abort(400, {'message': e.orig.args})
+        abort(400, e)
     
     try:
         db.session.add(new_event)
