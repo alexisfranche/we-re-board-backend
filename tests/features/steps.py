@@ -376,6 +376,24 @@ def then_the_system_displays_the_event_with_the_following_information(step):
         "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
 
 
+# ID_009 Apply
+@step(u'Given I am signed in as user Jackson')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
+@step(u'And I am on the active event page titled Poker')
+def and_i_am_on_event_poker(step):
+    world.event_id = 5
+@step(u'When I select an event to access the selected event page')
+def when_i_apply_for_the_event(step):
+    result = applyEventAPI(world.event_id, world.user_id)
+
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        response = result
+
+
+
 
 # ID_010 View selected user profile
 
@@ -468,6 +486,17 @@ def createUserAPI(name, email, password):
     url = "https://were-board.herokuapp.com/user"
 
     payload = "{\"name\":\""+name+"\",\"email\":\""+email+"\",\"password\":\""+password+"\"}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    return json.loads(response.text.encode('utf8'))
+
+def applyEventAPI(event_id, user_id):
+    url = "https://were-board.herokuapp.com/join"
+
+    payload = "{\"event_id\":\""+event_id+"\",\"user_id\":\""+user_id+"\"}"
     headers = {
     'Content-Type': 'application/json'
     }
