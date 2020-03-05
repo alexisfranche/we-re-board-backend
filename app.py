@@ -245,7 +245,7 @@ def get_events():
 # Get all active events
 @app.route('/event/active', methods=['GET'])
 def get_active_events():
-    active_events = Event.query.filter(and_(Event.game == game, or_(Event.status == "upcoming", Event.status == "rescheduled"))).all()
+    active_events = Event.query.filter(or_(Event.status == "upcoming", Event.status == "rescheduled")).all()
     result = events_schema.dump(active_events)
     return jsonify(result)
     
