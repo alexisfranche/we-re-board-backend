@@ -176,7 +176,11 @@ regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 @app.route("/event_user/exists", methods=['POST'])
 def is_event_user():
     e_id = request.json['event_id']
+    u_id = request.json['user_id']
+    event_user = Event_User.query.filter_by(event_id=int(e_id)).first()
     bool = True
+    if event_user is None:
+        bool = False
     return make_response(jsonify({'is_joined': bool}), 200)
     
 def checkEmail(email):
