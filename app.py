@@ -177,11 +177,11 @@ regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 def is_event_user():
     e_id = request.json['event_id']
     u_id = request.json['user_id']
-    event_user = Event_User.query.filter_by(event_id = int(e_id), user_id = int(u_id))
+    event_user = Event_User.query.filter_by(event_id = int(e_id)).filter_by(user_id = int(u_id))
     bool = True
     if not event_user:
         bool = False
-    return make_response(jsonify({'is_joined': ','.join(event_user)}), 200)
+    return make_response(jsonify({'is_joined': bool}), 200)
     
 def checkEmail(email):
     if (re.search(regex, email)):
