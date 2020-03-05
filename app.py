@@ -172,7 +172,17 @@ def add_event_user():
 
 regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
-
+# endpoint check if user is applied to the event
+@app.route("/event_user/exists", methods=["POST"])
+def is_event_user(id):
+    event_id = request.json['event_id']
+    user_id = request.json['user_id']
+    event_user = Event_User.query.filter(and_(event_id == int(event_id), user_id == int(user_id)))
+    bool = True
+    if event is None:
+        bool = False
+    return bool
+    
 def checkEmail(email):
     if (re.search(regex, email)):
         print("valid password")
