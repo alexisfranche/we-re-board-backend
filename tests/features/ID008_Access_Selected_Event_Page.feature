@@ -8,5 +8,6 @@ As a user of the "We're Board" app, I would like to be able to Access selected e
       And I have navigated to the 'Find Events' page
      When I select an event to access the selected event page
      Then the system displays all the details about the event:
+
       | Name                        | Game  | Date       | Location                                         | Description |
-      | Friendly poker at my place! | Poker | 07/02/2020T04:00:00+00:00 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      |
+      | Friendly poker at my place! | Poker | 2020-07-02T04:00:00+00:00 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      |
