@@ -386,6 +386,8 @@ def profile_update(id):
 @app.route('/event/cancel/<id>', methods=["PUT"])
 def event_cancel(id):
     event = Event.query.get(id)
+    if event is None:
+        abort(404)
     event.status = EventStatus.Cancelled.value
     db.session.commit()
 
@@ -396,6 +398,8 @@ def event_cancel(id):
 @app.route('/event/<id>', methods=["DELETE"])
 def event_delete(id):
     event = Event.query.get(id)
+    if event is None:
+        abort(404)
     db.session.delete(event)
     db.session.commit()
 
