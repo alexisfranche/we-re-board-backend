@@ -399,6 +399,8 @@ def then_im_associated_with_the_event(step):
     else:
         world.response = result
         assert world.response["is_joined"] == true
+        getJSONfromAPI("https://were-board.herokuapp.com/event_user/delete/" + str(world.event_id) + "/" + str(world.user_id))
+
 
 
 # ID_010 View selected user profile

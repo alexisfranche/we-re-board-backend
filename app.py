@@ -422,6 +422,16 @@ def event_cancel(id):
 
     return event_schema.jsonify(event)
 
+# endpoint to delete an event_user
+@app.route('/event_user/delete/<event_id>/<user_id>', methods=["DELETE"])
+def event_user_delete(event_id, user_id):
+    event_user = Event_User.query.filter_by(event_id=event_id, user_id=user_id).first()
+    if event_user is None:
+        abort(404)
+    db.session.delete(event_user)
+    db.session.commit()
+    return
+
 
 # endpoint to delete an event
 @app.route('/event/<id>', methods=["DELETE"])
