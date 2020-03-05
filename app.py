@@ -4,10 +4,11 @@ from flask_marshmallow import Marshmallow
 from marshmallow_enum import EnumField
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import DBAPIError, SQLAlchemyError
-
+from sqlalchemy import or_, and_
 import enum
 import os
 import re
+import urllib.parse
 
 # Init app
 app = Flask(__name__)
@@ -229,6 +230,14 @@ def event_detail(id):
     if event is None:
         abort(404)
     return event_schema.jsonify(event)
+
+# Get all events of one game type
+@app.route('/event/category/<game>', methods=['GET'])
+def get_events_by_category(game):
+    game = urllib.parse.unquote_plus(game)
+    category_events = Event.query.filter(and_(db.event.game == game, or_(db.event.status == "upcoming", db.event.status == "rescheduled")))
+    result = events_schema.dump(category_events)
+    return jsonify(result)
 
 # endpoint to get profile info by id (returns everything about user)
 @app.route("/user/profile/<id>", methods=["GET"])
