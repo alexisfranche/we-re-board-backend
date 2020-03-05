@@ -383,7 +383,7 @@ def profile_update(id):
 
 
 # endpoint to cancel an event
-@app.route('/event/<id>/cancel', methods=["PUT"])
+@app.route('/event/cancel/<id>', methods=["PUT"])
 def event_cancel(id):
     event = Event.query.get(id)
     event.status = EventStatus.Cancelled.value
