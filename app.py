@@ -179,7 +179,7 @@ def is_event_user():
     u_id = request.json['user_id']
     event_user = Event_User.query.filter_by(event_id=int(e_id)).first()
     bool = True
-    if event_user is None:
+    if not event_user:
         bool = False
     return make_response(jsonify({'is_joined': bool}), 200)
     
