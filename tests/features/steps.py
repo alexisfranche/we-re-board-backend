@@ -320,11 +320,11 @@ def and_i_have_navigated_to_the_group1_page(step):
     pass
 @step(u'When I select the \'([^\']*)\' option')
 def when_i_select_the_group1_option(step, group1):
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event/category/"+group1)
     if 'error' in result:
         world.error = result["error"]
     else:
-        world.eventlist = result#change this to match API once implemented
+        world.eventlist = result
     
 @step(u'Then the system displays all the active events in a list by categories with the following information:')
 def then_the_system_displays_all_the_active_events_in_a_list_by_categories_with_the_following_information(step):
@@ -338,8 +338,8 @@ def then_the_system_displays_all_the_active_events_in_a_list_by_categories_with_
             "Got date = %s instead of %s for %s"  % (eventlist[i]['datetime'], step.hashes[i]["Date"], eventlist[i]['name'])
         assert eventlist[i]['address'] == step.hashes[i]["Address"],\
             "Got address = %s instead of %s for %s"  % (eventlist[i]['address'], step.hashes[i]["Address"], eventlist[i]['name'])
-@step(u'But  there are no active events exist in the system database')
-def but_there_are_no_active_events_exist_in_the_system_database(step):
+@step(u'But there are no active events of that category in the system database')
+def but_there_are_no_active_events_of_that_category_in_the_system_database(step):
     pass
 @step(u'Then the system display a "([^"]*)" error message')
 def then_the_system_display_a_group1_error_message(step, group1):
@@ -358,7 +358,7 @@ def and_i_have_navigated_to_the_group1_page(step):
 @step(u'When I select an event to access the selected event page')
 def when_i_select_the_event(step):
     world.event_id = 5
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event" + world.event_id)
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event/" + world.event_id)
     if 'error' in result:
         world.error = result["error"]
     else:
@@ -374,6 +374,35 @@ def then_the_system_displays_the_event_with_the_following_information(step):
         "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
     assert event['address'] == step.hashes["Address"],\
         "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
+
+
+# ID_009 Apply
+@step(u'Given I am signed in as user Jackson')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
+@step(u'And I am on the active event page titled Poker')
+def and_i_am_on_event_poker(step):
+    world.event_id = 5
+@step(u'When I select an event to access the selected event page')
+def when_i_apply_for_the_event(step):
+    result = applyEventAPI(world.event_id, world.user_id)
+
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        response = result
+@step(u'Then I should be associated with the event')
+def then_im_associated_with_the_event(step):
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event_user/exists/" + world.event_id+ "/"+ world.user_id)
+
+    if 'error' in result:
+        world.error = result["error"]
+        raise AssertionError("false")
+    else:
+        world.response = result
+        assert world.response["is_joined"] == true
+
+
 
 
 
@@ -413,39 +442,39 @@ def view_user_profile(step, viewed_user_id):
     else:
         world.myprofile = result
 
-        
+
 #ID_012 Create Event
-@step(u'Given I am logged in as a user')
-def given_i_am_logged_in_as_a_user(step):
-    world.user_id = 20
+#@step(u'Given I am logged in as a user')
+#def given_i_am_logged_in_as_a_user(step):
+ #   world.user_id = 20
 
 
-@step(u'And I have navigated to the \'Create Event\' page')
-def and_i_have_navigated_to_the_create_event_page(step):
-    pass
+#@step(u'And I have navigated to the \'Create Event\' page')
+#def and_i_have_navigated_to_the_create_event_page(step):
+ #   pass
 
-@step(u'When I create an event with my information')
-def when_i_select_the_create_event_option(step, info):
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
-    if 'error' in result:
-        world.error = result["error"]
-    else:
-        world.event = result  # change this to match API once implemented
-
-
-@step(u'Then the system displays my event')
-def then_the_system_displays_my_event(step):
-    event = world.event
-    assert event['name'] == step.hashes["Name"],\
-        "Got name = %s instead of %s"  % (event['name'], step.hashes["Name"])
-    assert event['game'] == step.hashes["Game"],\
-        "Got game = %s instead of %s for %s"  % (event['game'], step.hashes["Game"], event['name'])
-    assert event['datetime'] == step.hashes["Date"],\
-        "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
-    assert event['address'] == step.hashes["Address"],\
-        "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
-    assert event['description'] == step.hashes["Description"],\
-        "Got description = %s instead of %s for %s"  % (event['description'], step.hashes["Description"], event['name'])
+#@step(u'When I create an event with my information')
+#def when_i_select_the_create_event_option(step, info):
+#    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
+#    if 'error' in result:
+#        world.error = result["error"]
+#    else:
+#       world.event = result  # change this to match API once implemented
+#
+#
+#@step(u'Then the system displays my event')
+#def then_the_system_displays_my_event(step):
+#    event = world.event
+#    assert event['name'] == step.hashes["Name"],\
+#        "Got name = %s instead of %s"  % (event['name'], step.hashes["Name"])
+#    assert event['game'] == step.hashes["Game"],\
+#        "Got game = %s instead of %s for %s"  % (event['game'], step.hashes["Game"], event['name'])
+#    assert event['datetime'] == step.hashes["Date"],\
+#        "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
+#    assert event['address'] == step.hashes["Address"],\
+#        "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
+#    assert event['description'] == step.hashes["Description"],\
+#        "Got description = %s instead of %s for %s"  % (event['description'], step.hashes["Description"], event['name'])
 
 
 @step(u'But the user is suspended')
@@ -468,6 +497,17 @@ def createUserAPI(name, email, password):
     url = "https://were-board.herokuapp.com/user"
 
     payload = "{\"name\":\""+name+"\",\"email\":\""+email+"\",\"password\":\""+password+"\"}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    return json.loads(response.text.encode('utf8'))
+
+def applyEventAPI(event_id, user_id):
+    url = "https://were-board.herokuapp.com/join"
+
+    payload = "{\"event_id\":\""+event_id+"\",\"user_id\":\""+user_id+"\"}"
     headers = {
     'Content-Type': 'application/json'
     }

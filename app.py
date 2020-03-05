@@ -140,12 +140,13 @@ def add_user():
 # Create an event
 @app.route('/event', methods=['POST'])
 def add_event():
+    
     name = request.json['name']
     address = request.json['address']
     game = request.json['game']
     datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = EventStatus.Upcoming.value
+    status = "upcoming"#EventStatus.Upcoming.value
     event_manager_id = request.json['event_manager_id']
 
     # new_event = Event(name, address, description, datetime, event_manager_id)
@@ -265,6 +266,8 @@ def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
     category_events =  all_events = Event.query.filter(and_(Event.game == game, or_(Event.status == "upcoming", Event.status == "rescheduled"))).all()
     result = events_schema.dump(category_events)
+    if not result:
+        return make_response(jsonify({'error': 'No active events of this category.'}), 400)
     return jsonify(result)
 
 # endpoint to get profile info by id (returns everything about user)
