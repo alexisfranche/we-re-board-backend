@@ -358,7 +358,7 @@ def and_i_have_navigated_to_the_group1_page(step):
 @step(u'When I select an event to access the selected event page')
 def when_i_select_the_event(step):
     world.event_id = 5
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event/" + world.event_id)
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event/" + str(world.event_id))
     if 'error' in result:
         world.error = result["error"]
     else:
@@ -502,7 +502,7 @@ def createUserAPI(name, email, password):
 def applyEventAPI(event_id, user_id):
     url = "https://were-board.herokuapp.com/join"
 
-    payload = "{\"event_id\":\""+event_id+"\",\"user_id\":\""+user_id+"\"}"
+    payload = "{\"event_id\":\""+str(event_id)+"\",\"user_id\":\""+str(user_id)+"\"}"
     headers = {
     'Content-Type': 'application/json'
     }
