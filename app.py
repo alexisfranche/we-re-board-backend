@@ -246,7 +246,7 @@ def event_detail(id):
 @app.route('/event/category/<game>', methods=['GET'])
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
-    category_events = Event.query.filter(and_(db.event.game == game, or_(db.event.status == "upcoming", db.event.status == "rescheduled")))
+    category_events = Event.query.filter(and_(game == game, or_(status == "upcoming", status == "rescheduled")))
     result = events_schema.dump(category_events)
     return jsonify(result)
 
