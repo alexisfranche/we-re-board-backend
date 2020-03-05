@@ -132,21 +132,15 @@ def add_event():
     game = request.json['game']
     datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = request.json['status']
+    status = "upcoming"
     event_manager_id = request.json['event_manager_id']
 
     #new_event = Event(name, address, description, datetime, event_manager_id)
-    try:
-        new_event = Event(name, address, game, description, datetime, status, event_manager_id)
-    except SQLAlchemyError as e:
-        abort(400, {'message': e.arg[0]})
+    new_event = Event(name, address, game, description, datetime, status, event_manager_id)
     
-    try:
-        db.session.add(new_event)
-        db.session.commit()
-    except:
-        abort(401)
-
+    db.session.add(new_event)
+    db.session.commit()
+    
     return event_schema.jsonify(new_event)
 
 #Add a user to an event
