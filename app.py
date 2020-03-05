@@ -177,7 +177,7 @@ regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 def is_event_user():
     e_id = request.json['event_id']
     u_id = request.json['user_id']
-    event_user = Event_User.query.filter_by(event_id=e_id, user_id = u_id).first()
+    event_user = Event_User.query.filter_by(event_id=int(e_id)).first()
     bool = True
     if event is None:
         bool = False
