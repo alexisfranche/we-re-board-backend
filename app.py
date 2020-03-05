@@ -181,7 +181,7 @@ def is_event_user():
     bool = True
     if not event_user:
         bool = False
-    return make_response(jsonify({'is_joined': bool}), 200)
+    return make_response(jsonify({'is_joined': ','.join(event_user)}), 200)
     
 def checkEmail(email):
     if (re.search(regex, email)):
