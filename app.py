@@ -174,7 +174,7 @@ regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
 # endpoint check if user is applied to the event
 @app.route("/event_user/exists", methods=["POST"])
-def is_event_user(id):
+def is_event_user():
     event_id = request.json['event_id']
     user_id = request.json['user_id']
     event_user = Event_User.query.filter(and_(event_id == int(event_id), user_id == int(user_id)))
