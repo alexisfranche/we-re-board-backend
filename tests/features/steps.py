@@ -392,7 +392,7 @@ def when_i_apply_for_the_event(step):
         response = result
 @step(u'Then I should be associated with the event')
 def then_im_associated_with_the_event(step):
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event_user/exists/" + str(world.event_id) + "/"+ str(world.user_id))
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event_user/exists/" + str(world.event_id) + "/" + str(world.user_id))
     if 'error' in result:
         world.error = result["error"]
         raise AssertionError("false")
@@ -503,7 +503,7 @@ def createUserAPI(name, email, password):
 def applyEventAPI(event_id, user_id):
     url = "https://were-board.herokuapp.com/join"
 
-    payload = '{\"event_id\":'+str(event_id)+',\"user_id\":'+str(user_id)+"}'
+    payload = "{\"event_id\":"+str(event_id)+",\"user_id\":"+str(user_id)+"\"}"
     headers = {
     'Content-Type': 'application/json'
     }
