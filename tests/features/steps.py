@@ -405,7 +405,6 @@ def then_im_associated_with_the_event(step):
 
 
 
-
 # ID_010 View selected user profile
 
 @step('I am a user of We\'re Board with id=(\d+)')
