@@ -344,7 +344,7 @@ def but_there_are_no_active_events_of_that_category_in_the_system_database(step)
 @step(u'Then the system display a "([^"]*)" error message')
 def then_the_system_display_a_group1_error_message(step, group1):
     assert world.error == group1,\
-        "Got error = %s"  % (world.error)
+        "Got error = %s instead of %s"  % (world.error, group1)
 
 
 # ID_008 Access specific event

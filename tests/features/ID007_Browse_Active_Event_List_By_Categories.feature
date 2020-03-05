@@ -19,4 +19,4 @@ As a user of the "We're Board" app, I would like to be able to browse active eve
       And I have navigated to the 'Find Events' page
      When I select the 'knucklebones' option
      But there are no active events of that category in the system database
-     Then the system display a "No active event exist. Please try again later" error message
+     Then the system display a "No active events of this category." error message
