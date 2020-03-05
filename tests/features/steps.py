@@ -383,10 +383,9 @@ def given_i_am_logged_in_as_a_user(step):
 @step(u'And I am on the active event page titled Poker')
 def and_i_am_on_event_poker(step):
     world.event_id = 5
-@step(u'When I select an event to access the selected event page')
+@step(u'When I apply for the event')
 def when_i_apply_for_the_event(step):
     result = applyEventAPI(world.event_id, world.user_id)
-
     if 'error' in result:
         world.error = result["error"]
     else:
@@ -394,15 +393,12 @@ def when_i_apply_for_the_event(step):
 @step(u'Then I should be associated with the event')
 def then_im_associated_with_the_event(step):
     result = getJSONfromAPI("https://were-board.herokuapp.com/event_user/exists/" + world.event_id+ "/"+ world.user_id)
-
     if 'error' in result:
         world.error = result["error"]
         raise AssertionError("false")
     else:
         world.response = result
         assert world.response["is_joined"] == true
-
-
 
 
 # ID_010 View selected user profile
@@ -491,7 +487,7 @@ def getJSONfromAPI(url):
     response = requests.get(url)
     data = response.json()
     return data
-    
+
 def createUserAPI(name, email, password):
     url = "https://were-board.herokuapp.com/user"
 
