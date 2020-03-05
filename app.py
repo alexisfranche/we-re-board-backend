@@ -242,7 +242,13 @@ def get_events():
     result = events_schema.dump(all_events)
     return jsonify(result)
 
-
+# Get all active events
+@app.route('/event', methods=['GET'])
+def get_events():
+    active_events = Event.query.filter(and_(Event.game == game, or_(Event.status == "upcoming", Event.status == "rescheduled"))).all()
+    result = events_schema.dump(active_events)
+    return jsonify(result)
+    
 # endpoint to get event info by id (returns everything about event)
 @app.route("/event/<id>", methods=["GET"])
 def event_detail(id):
@@ -257,7 +263,7 @@ def event_detail(id):
 @app.route('/event/category/<game>', methods=['GET'])
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
-    category_events = Event.query.filter(and_(game == game, or_(status == "upcoming", status == "rescheduled")))
+    category_events =  all_events = Event.query.filter(and_(Event.game == game, or_(Event.status == "upcoming", Event.status == "rescheduled"))).all()
     result = events_schema.dump(category_events)
     return jsonify(result)
 
