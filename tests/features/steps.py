@@ -402,7 +402,6 @@ def then_im_associated_with_the_event(step):
         getJSONfromAPI("https://were-board.herokuapp.com/event_user/delete/" + str(world.event_id) + "/" + str(world.user_id))
 
 
-
 # ID_010 View selected user profile
 
 @step('I am a user of We\'re Board with id=(\d+)')
