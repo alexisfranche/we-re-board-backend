@@ -25,6 +25,7 @@ db = SQLAlchemy(app)
 # Init Marshmallow
 ma = Marshmallow(app)
 
+
 # User Class/Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,23 +39,27 @@ class User(db.Model):
         self.email = email
         self.password = password
 
+
 # User Schema
 class UserSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'email', 'password', 'description')
 
+
 # Init Schema User
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
-#Event status enumeration
+
+# Event status enumeration
 class EventStatus(enum.Enum):
     Upcoming = "upcoming"
     Finished = "finished"
     Cancelled = "cancelled"
     Rescheduled = "rescheduled"
 
-#Event Class/Model
+
+# Event Class/Model
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -62,11 +67,11 @@ class Event(db.Model):
     game = db.Column(db.String(100))
     description = db.Column(db.String(200))
     datetime = db.Column(db.String(200))
-    #status = db.Column(db.Enum(EventStatus))
+    # status = db.Column(db.Enum(EventStatus))
     status = db.Column(db.String(100))
     event_manager_id = db.Column(db.Integer)
 
-    #def __init__(self, name, address, game, description, datetime, event_manager_id):
+    # def __init__(self, name, address, game, description, datetime, event_manager_id):
     def __init__(self, name, address, game, description, datetime, status, event_manager_id):
         self.name = name
         self.address = address
@@ -76,18 +81,21 @@ class Event(db.Model):
         self.status = status
         self.event_manager_id = event_manager_id
 
+
 # Event Schema
 class EventSchema(ma.Schema):
-    #status = EnumField(EventStatus)
+    # status = EnumField(EventStatus)
     class Meta:
         fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'status', 'event_manager_id')
-        #fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'event_manager_id')
+        # fields = ('id', 'name', 'address', 'game', 'description', 'datetime', 'event_manager_id')
+
 
 # Init Schema Event
 event_schema = EventSchema()
 events_schema = EventSchema(many=True)
 
-#Event-User Class/Model #THIS CLASS ESTABLISHES A EVENT TO USER RELATIONSHIP
+
+# Event-User Class/Model #THIS CLASS ESTABLISHES A EVENT TO USER RELATIONSHIP
 class Event_User(db.Model):
     event_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, primary_key=True)
@@ -96,19 +104,22 @@ class Event_User(db.Model):
         self.event_id = event_id
         self.user_id = user_id
 
+
 # Event Schema
 class Event_UserSchema(ma.Schema):
     class Meta:
         fields = ('event_id', 'user_id')
 
+
 # Init Schema User
-event_user_relationship_schema =  Event_UserSchema()
+event_user_relationship_schema = Event_UserSchema()
 event_user_relationships_schema = Event_UserSchema(many=True)
 
 
 @app.route('/', methods=['GET'])
 def hello():
     return "<h1> were board backend!!! </h1> You need to login first."
+
 
 # Create a user
 @app.route('/user', methods=['POST'])
@@ -125,32 +136,28 @@ def add_user():
 
     return user_schema.jsonify(new_user)
 
+
 # Create an event
 @app.route('/event', methods=['POST'])
 def add_event():
     name = request.json['name']
     address = request.json['address']
     game = request.json['game']
-    datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
+    datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
     description = request.json['description']
-    status = request.json['status']
+    status = EventStatus.Upcoming.value
     event_manager_id = request.json['event_manager_id']
 
-    #new_event = Event(name, address, description, datetime, event_manager_id)
-    try:
-        new_event = Event(name, address, description, datetime, status, event_manager_id)
-    except SQLAlchemyError as e:
-        abort(400, {'message': e.arg[0]})
-    
-    try:
-        db.session.add(new_event)
-        db.session.commit()
-    except:
-        abort(401)
+    # new_event = Event(name, address, description, datetime, event_manager_id)
+    new_event = Event(name, address, game, description, datetime, status, event_manager_id)
+
+    db.session.add(new_event)
+    db.session.commit()
 
     return event_schema.jsonify(new_event)
 
-#Add a user to an event
+
+# Add a user to an event
 @app.route('/join', methods=['POST'])
 def add_event_user():
     event_id = request.json['event_id']
@@ -162,11 +169,12 @@ def add_event_user():
 
     return event_user_relationship_schema.jsonify(new_event_user)
 
+
 regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
-def checkEmail(email):
 
-    if(re.search(regex,email)):
+def checkEmail(email):
+    if (re.search(regex, email)):
         print("valid password")
 
     else:
@@ -174,8 +182,7 @@ def checkEmail(email):
 
 
 def password_check(passwd):
-
-    SpecialSym =['$', '@', '#', '%']
+    SpecialSym = ['$', '@', '#', '%']
     val = True
 
     if len(passwd) < 2:
@@ -200,13 +207,14 @@ def password_check(passwd):
         abort(400, {'message': 'Password should have at least one lowercase letter'})
 
         val = False
-          
-    if not any(char in SpecialSym for char in passwd): 
-        print('Password should have at least one of the symbols $@#') 
+
+    if not any(char in SpecialSym for char in passwd):
+        print('Password should have at least one of the symbols $@#')
         abort(400, {'message': 'Password should have at least one of the symbols $@#'})
         val = False
     if val:
         return val
+
 
 # Get all users
 @app.route('/user', methods=['GET'])
@@ -215,12 +223,14 @@ def get_users():
     result = users_schema.dump(all_users)
     return jsonify(result)
 
+
 # Get all events
 @app.route('/event', methods=['GET'])
 def get_events():
     all_events = Event.query.all()
     result = events_schema.dump(all_events)
     return jsonify(result)
+
 
 # endpoint to get event info by id (returns everything about event)
 @app.route("/event/<id>", methods=["GET"])
@@ -230,6 +240,7 @@ def event_detail(id):
     if event is None:
         abort(404)
     return event_schema.jsonify(event)
+
 
 # Get all events of one game type
 @app.route('/event/category/<game>', methods=['GET'])
@@ -248,6 +259,7 @@ def profile_detail(id):
         abort(404)
     return user_schema.jsonify(user)
 
+
 # endpoint to get user detail by id (returns restricted information about user)
 @app.route("/user/<id>", methods=["GET"])
 def user_detail(id):
@@ -258,6 +270,7 @@ def user_detail(id):
     delattr(user, 'password')
     delattr(user, 'email')
     return user_schema.jsonify(user)
+
 
 # endpoint to login user
 @app.route("/login", methods=["POST", "GET"])
@@ -274,13 +287,22 @@ def login_user():
             # flash('Invalid Credentials. Please try again.')
             abort(401)
         # else:
-            #flash('You were logged in')
+        # flash('You were logged in')
     return make_response(jsonify({'data': 'You were logged in.'}), 200)
+
 
 # endpoint to logout user
 @app.route("/logout", methods=["GET"])
 def logout_user():
     return make_response(jsonify({'data': 'You were logged out.'}), 200)
+
+
+@app.route('/event/manager/<manager_id>', methods=['GET'])
+def get_Events_By_Manager(manager_id):
+    events = Event.query.filter_by(event_manager_id=manager_id)
+    result = events_schema.dump(events)
+    return jsonify(result)
+
 
 # endpoint to modify an event
 @app.route('/event/<id>', methods=['PUT'])
@@ -289,19 +311,21 @@ def event_update(id):
     name = request.json['name']
     address = request.json['address']
     game = request.json['game']
-    datetime = request.json['datetime'] #example format 2020-04-08 04:05:06
+    datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
     description = request.json['description']
 
-    if not name == "" : event.name = name
-    if not address == "" : event.address = address
-    if not game == "" : event.game = game
-    if not datetime == "" :
+    if not name == "": event.name = name
+    if not address == "": event.address = address
+    if not game == "": event.game = game
+    if not datetime == "":
         event.datetime = request.json['datetime']
-        event.status = "Rescheduled"
-    if not description == "" : event.description = description
+        event.status = EventStatus.Rescheduled.value
+    if not description == "":
+        event.description = description
 
     db.session.commit()
     return event_schema.jsonify(event)
+
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
@@ -316,11 +340,12 @@ def user_update(id):
     user.name = name
     user.description = description
 
-    #db.session.update(user)
+    # db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
-#endpoint to update my name
+
+# endpoint to update my name
 @app.route("/user/profile/name/<email>", methods=["PUT"])
 def user_update_name(email):
     user = User.query.filter_by(email=email).first()
@@ -328,11 +353,12 @@ def user_update_name(email):
 
     user.name = name
 
-    #dp.session.update(user)
+    # dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
-#endpoint to update my desc
+
+# endpoint to update my desc
 @app.route("/user/profile/desc/<email>", methods=["PUT"])
 def user_update_desc(email):
     user = User.query.filter_by(email=email).first()
@@ -340,9 +366,10 @@ def user_update_desc(email):
 
     user.description = description
 
-    #dp.session.update(user)
+    # dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
+
 
 # modify
 @app.route("/user/profile/<id>", methods=["PUT"])
@@ -359,23 +386,29 @@ def profile_update(id):
     user.name = name
     user.description = description
 
-    #db.session.update(user)
+    # db.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
 
+
 # endpoint to cancel an event
-@app.route('/event/<id>', methods=["PUT"])
+@app.route('/event/cancel/<id>', methods=["PUT"])
 def event_cancel(id):
     event = Event.query.get(id)
+    if event is None:
+        abort(404)
     event.status = EventStatus.Cancelled.value
     db.session.commit()
-    
+
     return event_schema.jsonify(event)
+
 
 # endpoint to delete an event
 @app.route('/event/<id>', methods=["DELETE"])
 def event_delete(id):
     event = Event.query.get(id)
+    if event is None:
+        abort(404)
     db.session.delete(event)
     db.session.commit()
 
@@ -391,13 +424,15 @@ def user_delete(id):
 
     return user_schema.jsonify(user)
 
-#Endpoint to check email exists
+
+# Endpoint to check email exists
 @app.route("/emailcheck/<email>", methods=["GET"])
 def checkIfEmailTaken(email):
     user = User.query.filter_by(email=email).first()
     if user is None:
         return "None"
     return "Some"
+
 
 @app.route("/email/<email>", methods=["GET"])
 def getUserWithEmail(email):
@@ -406,25 +441,30 @@ def getUserWithEmail(email):
         abort(404)
     return user_schema.jsonify(user)
 
-#error 404 handling
+
+# error 404 handling
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-    
-#error 400 handling
+
+
+# error 400 handling
 @app.errorhandler(400)
 def update_error(error):
     return make_response(jsonify({'error': 'Invalid email or password'}), 400)
-    
+
+
 # error 401 handling
 @app.errorhandler(401)
 def unauthorized(error):
     return make_response(jsonify({'error': 'Invalid Credentials. Please try again.'}), 401)
 
+
 # error 403 handling
 @app.errorhandler(403)
 def custom_unauthorized(error):
     return make_response(jsonify({'error': 'You need to login first.'}), 403)
+
 
 db.create_all()
 
