@@ -392,14 +392,14 @@ def when_i_apply_for_the_event(step):
         response = result
 @step(u'Then I should be associated with the event')
 def then_im_associated_with_the_event(step):
-    result = getJSONfromAPI("https://were-board.herokuapp.com/event_user/exists/" + str(world.event_id) + "/" + str(world.user_id))
+    result = existsEventUserAPI(world.event_id, world.user_id)
     if 'error' in result:
         world.error = result["error"]
         raise AssertionError("false")
     else:
         world.response = result
         assert world.response["is_joined"] == true
-        getJSONfromAPI("https://were-board.herokuapp.com/event_user/delete/" + str(world.event_id) + "/" + str(world.user_id))
+        deleteEventUserAPI(world.event_id, world.user_id)
 
 
 # ID_010 View selected user profile
@@ -510,6 +510,27 @@ def applyEventAPI(event_id, user_id):
     response = requests.request("POST", url, headers=headers, data = payload)
 
     return json.loads(response.text.encode('utf8'))
+
+def existsEventUserAPI(event_id, user_id):
+    url = "https://were-board.herokuapp.com/event_user/exists"
+
+    payload = "{\"event_id\":"+str(event_id)+",\"user_id\":"+str(user_id)+"\"}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    return json.loads(response.text.encode('utf8'))
+
+def deleteEventUserAPI(event_id, user_id):
+    url = "https://were-board.herokuapp.com/event_user/delete/" + event_id + "/" + user_id
+
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    requests.request("DELETE", url, headers=headers)
+
+    return
     
 def getJSONfromLoginAPI(email, password):
     url = "https://were-board.herokuapp.com/login"
