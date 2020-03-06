@@ -398,7 +398,7 @@ def then_im_associated_with_the_event(step):
         raise AssertionError("false")
     else:
         world.response = result
-        assert world.response["is_joined"] == true
+        assert world.response["is_joined"] == bool("true")
         deleteEventUserAPI(world.event_id, world.user_id)
 
 
@@ -514,7 +514,7 @@ def applyEventAPI(event_id, user_id):
 def existsEventUserAPI(event_id, user_id):
     url = "https://were-board.herokuapp.com/event_user/exists"
 
-    payload = "{\"event_id\":"+str(event_id)+",\"user_id\":"+str(user_id)+"\"}"
+    payload = '{\"event_id\":'+str(event_id)+',\"user_id\":'+str(user_id)+'}'
     headers = {
     'Content-Type': 'application/json'
     }
@@ -523,7 +523,7 @@ def existsEventUserAPI(event_id, user_id):
     return json.loads(response.text.encode('utf8'))
 
 def deleteEventUserAPI(event_id, user_id):
-    url = "https://were-board.herokuapp.com/event_user/delete/" + event_id + "/" + user_id
+    url = "https://were-board.herokuapp.com/event_user/delete/" + str(event_id) + "/" + str(user_id)
 
     headers = {
     'Content-Type': 'application/json'
