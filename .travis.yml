@@ -8,6 +8,6 @@ install:
 script: 
   - pytest testSuite.py
   - cd tests
+  - git clone https://github.com/alexisfranche/we-re-board-backend.git
+  - python setup.py install
   - lettuce
-  #- git clone https://github.com/alexisfranche/we-re-board-backend.git
-  #- python setup.py install
