@@ -503,7 +503,7 @@ def createUserAPI(name, email, password):
 def applyEventAPI(event_id, user_id):
     url = "https://were-board.herokuapp.com/join"
 
-    payload = "{\"event_id\":"+str(event_id)+",\"user_id\":"+str(user_id)+"\"}"
+    payload = '{\"event_id\":'+str(event_id)+',\"user_id\":'+str(user_id)+'}'
     headers = {
     'Content-Type': 'application/json'
     }
