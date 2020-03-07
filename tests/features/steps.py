@@ -515,6 +515,38 @@ def dont_specify_name(step):
     pass
 
 
+
+#ID 013 Cancel an Event
+@step(u'Given I am logged in as the Event Manager with id=(\d+)')
+def given_i_am_logged_in_as_the_event_manager(step, id):
+    world.user_id=id
+    pass
+
+@step(u'And I have navigated to the \'Manage my Events\' page')
+def and_i_have_navigated_to_manage_my_events_page(step):
+    pass
+
+@step(u'When I select the \'Delete\' button next to an Event with id=(\d+)')
+def when_i_select_delete(step, event_id):
+    world.event_id=event_id
+    result = deleteEventUserAPI(world.event_id, world.user_id)
+    world.response = result
+
+@step(u'Then the Event is deleted')
+def delete_event(step):
+    pass
+
+@step(u'And a \'Successfully deleted event\' message is issued')
+def display_success_message(step):
+    pass
+
+@step(u'Given I am logged in as a user with id=(\d+)')
+def logged_in_as_user(step, id):
+    world.user_id = id
+@step(u'Then a \'You are not the Event Manager\' message is issued')
+def you_are_not_event_manager(step):
+    pass
+
 #ID_016 Modify an Event
 
 @step('Given I am logged in as the Event Manager with id=(\d+)')
