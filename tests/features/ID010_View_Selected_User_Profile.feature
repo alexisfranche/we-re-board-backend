@@ -18,6 +18,6 @@ Scenario: Viewing a non-existing user's profile (Error flow)
 	Given I am a user of We're Board with id=20
 	And I am logged into We're Board
 	When I access the page of a non-existing user
-	Then a "Not found" message is displayed
+	Then a "User Not found" message is displayed
 
 

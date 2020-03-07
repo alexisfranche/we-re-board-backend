@@ -110,6 +110,7 @@ def then_the_system_does_not_log_me_in_and_displays_an_error_message(step, messa
 @step('I am logged in the application as an user with id = (\d+)')
 def given_i_am_logged_in_the_application(step, user_id):
     world.user_id = user_id
+
     
 @step('I log out of the application')
 def when_i_log_out_of_the_application(step):
@@ -420,8 +421,8 @@ def when_i_access_the_page_of_a_non_existing_user(step):
         world.myprofile = result
 
 @step(u'Then a "([^"]*)" message is displayed')
-def then_a_group1_message_is_displayed(step, group1):
-    assert world.error == group1,\
+def then_a_user_not_found_message_is_displayed(step, group1):
+    assert world.error == group1, \
         "Got error = %s instead of %s"  % (world.error, group1)
 
 @step(u'I am logged in the application as an user with id = "([^"]*)"')
@@ -458,6 +459,7 @@ def system_displays_user(step):
 def given_i_am_logged_in_as_a_user(step):
     world.user_id = 20
 
+
 @step(u'And I am on the create event page')
 def and_i_am_on_the_create_event_page(step):
     pass
@@ -474,24 +476,27 @@ def when_i_select_the_create_event_option(step):
 
     if 'error' in result:
         world.error = result["error"]
+
     else:
         world.event = result
+
+@step(u'Then the system display a "([^"]*)" error message')
+def then_the_system_displays_error_message(step, group1):
+    assert world.error == group1,\
+        "Got error = %s instead of %s"  % (world.error, group1)
+
 
 @step(u'Then the system should create my event')
 def create_event(step):
     pass
+
 @step(u'And I should see the event in the \'Manage my Events\' page under \'hosting\'')
 def see_event(step):
     pass
+
 @step(u'But I am suspended')
 def but_the_user_is_suspended(step):
     pass
-
-@step(u'Then I should receive an error message')
-def display_error_message(step):
-    group1 = "Not found"
-    assert world.error == group1, \
-        "Got error = %s instead of %s" % (world.error, group1)
 
 @step(u'And I schedule the event for a date prior to the current date')
 def schedule_event_prior_to_current_date(step):
@@ -544,9 +549,6 @@ def then_i_can_edit_info(step):
 @step('And when I press the \'Save\' button the Event\'s information is updated')
 def event_info_updated(step):
     assert world.old_event["name"] != world.new_event["name"]
- 
-
-
 
 
 ##HELPER FUCNTIONS

@@ -19,7 +19,7 @@
     When I create the event with these informations:
       | Name                        | Game  | Date       | Location                                         | Description | 
       | Friendly poker at my place! | Poker | 07/02/2020 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      | 
-    Then I should receive an error message
+    Then the system display a "Suspended User" error message
   
   Scenario: Create an event for an invalid date as a normal user (Error Flow)
 
@@ -30,7 +30,7 @@
       | Friendly poker at my place! | Poker | 07/02/2019 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      | 
 
     And I schedule the event for a date prior to the current date
-    Then I should receive an error message
+    Then the system display a "Invalid Date" error message
   
   Scenario: Create an event for an invalid address as a normal user(Error Flow)
 
@@ -41,7 +41,7 @@
       | Friendly poker at my place! | Poker | 07/02/2020 | At my house | blabla      |
 
      And I specify an address for the event that does not exist
-    Then I should receive an error message
+    Then the system display a "Invalid Address" error message
   
   Scenario: Create an event without specifying a game type as a normal user(Error Flow)
 
@@ -52,7 +52,7 @@
       | Friendly poker at my place! |      | 07/02/2020 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      | 
 
      And I do not specify a game type for the event
-    Then I should receive an error message
+    Then the system display a "Invalid Game type" error message
   
   Scenario: Create an event without specifying an event name as a normal user(Error Flow)
 
@@ -63,6 +63,6 @@
       |      | Poker | 07/02/2020 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      | 
 
      And I do not specify a name for the event
-    Then I should receive an error message
+    Then the system display a "Invalid event name" error message
   
   
