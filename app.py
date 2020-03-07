@@ -140,8 +140,7 @@ def add_user():
 # Create an event
 @app.route('/event', methods=['POST'])
 def add_event():
-    
-       isMissingField = False
+    isMissingField = False
     try:
         name = request.json['name']
         address = request.json['address']
@@ -154,7 +153,7 @@ def add_event():
         isMissingField = True
     
     #error flows
-     #Missing field
+    #Missing field
     if isMissingField:
         return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
     #Invalid datetime
