@@ -12,15 +12,6 @@
     Then the system should create my event
     And I should see the event in the 'Manage my Events' page under 'hosting'
   
-  Scenario: Create an event as a suspended user (Alternate Flow)
-    Given I am signed in as a user
-     And I am on the create event page
-     But I am suspended
-    When I create the event with these informations:
-      | Name                        | Game  | Date       | Location                                         | Description | 
-      | Friendly poker at my place! | Poker | 07/02/2020 | 3448 Rue Clark, Montréal, Québec H2S 3G5, Canada | blabla      | 
-    Then the system display a "Suspended User" error message
-  
   Scenario: Create an event for an invalid date as a normal user (Error Flow)
 
     Given I am signed in as a user
@@ -31,17 +22,6 @@
 
     And I schedule the event for a date prior to the current date
     Then the system display a "Invalid Date" error message
-  
-  Scenario: Create an event for an invalid address as a normal user(Error Flow)
-
-    Given I am signed in as a user
-     And I am on the create event page
-    When I create the event with these informations:
-      | Name                        | Game  | Date       | Location    | Description | 
-      | Friendly poker at my place! | Poker | 07/02/2020 | At my house | blabla      |
-
-     And I specify an address for the event that does not exist
-    Then the system display a "Invalid Address" error message
   
   Scenario: Create an event without specifying a game type as a normal user(Error Flow)
 

@@ -664,11 +664,12 @@ def deleteAPI(url):
 
 def createEventAPI(name, address, game, description, datetime, id):
     url = "https://were-board.herokuapp.com/event"
-    payload = "{\"name\":\"" + name + "\",\"address\":\"" + address + "\",\"game\":\"" + game + "\",\"datetime\":\"" + str(datetime) + "\",\"description\":\"" + description + "\", \"event_manager_id\":\"" + str(id) + "\"}"
-    payload = payload.encode('utf-8')
+
+    payload = "{\"name\":\""+name+"\", \"address\":\""+address+"\", \"description\":\""+description+"\", \"datetime\":\""+str(datetime)+"\", \"event_manager_id\": \""+str(id)+"\", \"game\":\""+game+"\"}"
     headers = {
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)
+
+    response = requests.request("POST", url, headers=headers, data = payload)
 
     return json.loads(response.text.encode('utf-8'))
