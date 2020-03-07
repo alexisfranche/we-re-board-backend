@@ -52,5 +52,20 @@ class FlaskTestCase(unittest.TestCase):
         # response = tester.get('/logout', follow_redirects=True)
         # self.assertIn(b'You need to login first.', response.data)
 
+    # Ensure correct cancel event
+    def test_correct_cancel_event(self):
+        tester = app.test_client()
+        event = tester.post('/event', data=dict(name="Antonios", address="2345 Rue life ouest", game="board game night",
+            datetime="2020-04-08 07:09:01", description="all kinds of board games to play"))
+        cancel_event_url = '/event/cancel/' + str(event.id)
+        response = tester.put(cancel_event_url)
+        self.assertEquals(200, response.status_code)
+
+    # Ensure incorrect cancel event
+    def test_correct_cancel_event(self):
+        tester = app.test_client()
+        response = tester.put('/event/cancel/420')
+        self.assertEquals(404, response.status_code)
+
 if __name__ == '__main__':
     unittest.main()
