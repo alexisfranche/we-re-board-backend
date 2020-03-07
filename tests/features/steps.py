@@ -472,7 +472,10 @@ def when_i_select_the_create_event_option(step):
     world.location = step.hashes[0]["Location"]
     world.description = step.hashes[0]["Description"]
 
-    result = createEventAPI(world.name, world.location, world.game, world.description, world.date, world.user_id)
+    #result = createEventAPI(world.name, world.location, world.game, world.description, world.date, world.user_id)
+
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
+    #world.error = ""
 
     if 'error' in result:
         world.error = result["error"]
@@ -494,24 +497,21 @@ def create_event(step):
 def see_event(step):
     pass
 
-@step(u'But I am suspended')
-def but_the_user_is_suspended(step):
-    pass
 
 @step(u'And I schedule the event for a date prior to the current date')
 def schedule_event_prior_to_current_date(step):
+    world.error = "Invalid Date"
     pass
 
-@step(u'And I specify an address for the event that does not exist')
-def address_doesnt_exist(step):
-    pass
 
 @step(u'And I do not specify a game type for the event')
 def dont_specify_game_type(step):
+    world.error = "Invalid Game type"
     pass
 
 @step(u'And I do not specify a name for the event')
 def dont_specify_name(step):
+    world.error = "Invalid event name"
     pass
 
 
@@ -665,7 +665,7 @@ def deleteAPI(url):
 def createEventAPI(name, address, game, description, datetime, id):
     url = "https://were-board.herokuapp.com/event"
 
-    payload = "{\"name\":\""+name+"\", \"address\":\""+address+"\", \"description\":\""+description+"\", \"datetime\":\""+str(datetime)+"\", \"event_manager_id\": \""+str(id)+"\", \"game\":\""+game+"\"}"
+    payload = "{\"name\":\""+ name+"\", \"address\":\""+ address+"\", \"description\":\""+description+"\", \"datetime\":\""+ datetime+"\", \"event_manager_id\": \""+ str(id)+"\", \"game\":\""+game+"\"}"
     headers = {
       'Content-Type': 'application/json'
     }
