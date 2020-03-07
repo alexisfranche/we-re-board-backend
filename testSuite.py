@@ -52,5 +52,26 @@ class FlaskTestCase(unittest.TestCase):
         # response = tester.get('/logout', follow_redirects=True)
         # self.assertIn(b'You need to login first.', response.data)
 
+    # Ensure that access event behaves correctly
+    def test_correct_access_event(self):
+        tester = app.test_client()
+        data = {"name":"Antonios", "address":"2345 Rue life ouest", "game":"board game night","datetime":"2020-04-08 07:09:01", "description":"all kinds of board games to play", "event_manager_id":'2'}
+        event = tester.post('/event', json=data)
+        response = tester.get('/event/'+ str(event.json['id']), follow_redirects=True)
+        self.assertEquals(response.status_code, 200)
+
+    # Ensure that access event behaves incorrectly 
+    def test_incorrect_access_event(self):
+        tester = app.test_client()
+        response = tester.get('/event/54367', follow_redirects=True)
+        self.assertEquals(response.status_code, 404)
+
+    
+
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
