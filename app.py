@@ -141,13 +141,26 @@ def add_user():
 @app.route('/event', methods=['POST'])
 def add_event():
     
-    name = request.json['name']
-    address = request.json['address']
-    game = request.json['game']
-    datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
-    description = request.json['description']
-    status = "upcoming"#EventStatus.Upcoming.value
-    event_manager_id = request.json['event_manager_id']
+       isMissingField = False
+    try:
+        name = request.json['name']
+        address = request.json['address']
+        game = request.json['game']
+        datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
+        description = request.json['description']
+        status = "upcoming"#EventStatus.Upcoming.value
+        event_manager_id = request.json['event_manager_id']
+    except:
+        isMissingField = True
+    
+    #error flows
+     #Missing field
+    if isMissingField:
+        return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
+    #Invalid datetime
+    if dt.strptime(datetime, '%Y-%m-%d %H:%M:%S')<dt.now():
+        return make_response(jsonify({'error': 'Invalid date and time'}), 400)
+   
 
     # new_event = Event(name, address, description, datetime, event_manager_id)
     new_event = Event(name, address, game, description, datetime, status, event_manager_id)
