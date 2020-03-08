@@ -4,9 +4,8 @@ import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from requests.auth import HTTPDigestAuth
 
-## STEP DEFINITIONS
+## STEP DEFINITIONS -----------------------------------------
 # ID 001 - Create user
-
 
 @step('I am browsing the login page')
 def given_i_am_browsing_the_login_page(step):
@@ -521,7 +520,7 @@ def event_info_updated(step):
 
 
 
-##HELPER FUCNTIONS
+##HELPER FUNCTIONS ----------------------
 def getJSONfromAPI(url):
     response = requests.get(url)
     data = response.json()

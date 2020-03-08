@@ -305,6 +305,20 @@ def user_detail(id):
     return user_schema.jsonify(user)
 
 
+#Modify event
+@app.route("/event/manage/<user_id>", methods=["GET"])
+def event_manage(user_id):
+    my_user_id = int(user_id)
+    event_user_list = Event_User.query.filter_by(user_id=my_user_id).all()
+    eventlist = []
+    for event_user in event_user_list:
+        event_id = event_user.event_id
+        event = Event.query.get(event_id)
+        eventlist.append(event)	
+    output = events_schema.dump(eventlist)
+    return jsonify(output)
+
+
 # endpoint to login user
 @app.route("/login", methods=["POST", "GET"])
 def login_user():
@@ -402,6 +416,9 @@ def user_update_desc(email):
     # dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
+
+
+
 
 
 # modify
