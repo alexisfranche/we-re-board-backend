@@ -261,6 +261,8 @@ def get_events():
 def get_active_events():
     active_events = Event.query.filter(or_(Event.status == "upcoming", Event.status == "rescheduled")).all()
     result = events_schema.dump(active_events)
+    if not result:
+        return make_response(jsonify({'error': 'No active event available. Please try again later.'}), 400)
     return jsonify(result)
     
 # endpoint to get event info by id (returns everything about event)

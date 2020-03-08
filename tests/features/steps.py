@@ -307,8 +307,24 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
             world.error = world.mynewprofile["error"]
 @step('I should receive an error message')
 def then_i_should_receive_an_error_message(step):
-    assert world.error == 'Invalid email or password',\
+    assert world.error,\
         "Got error = %s"  % (world.error)
+#ID_006
+
+@step(u'When I have navigated to the \'Find Events\' page')
+def when_i_have_navigated_to_the_find_event_page(step):
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event/active")
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.alleventlist = result
+@step(u'And no active events exist in the system database')
+def and_no_active_events_exist_in_the_system_database(step):
+    world.alleventlist=''
+@step(u'Then the system displays the list of all active events in which I can participate')
+def then_the_system_displays_the_list_of_all_active_events_in_which_I_can_participate_in(step):
+    alleventlist = world.alleventlist
+    assert alleventlist , "Got error = %s" %(world.error)
 
 #ID_007
 @step(u'Given I am logged in as a user')
@@ -324,7 +340,7 @@ def when_i_select_the_group1_option(step, group1):
         world.error = result["error"]
     else:
         world.eventlist = result
-    
+
 @step(u'Then the system displays all the active events in a list by categories with the following information:')
 def then_the_system_displays_all_the_active_events_in_a_list_by_categories_with_the_following_information(step):
     eventlist = world.eventlist
