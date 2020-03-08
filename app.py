@@ -375,14 +375,14 @@ def event_update(id):
     #Missing field
     if isMissingField:
         return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
-    #Invalid datetime
-    if dt.strptime(datetime, '%Y-%m-%d %H:%M:%S')<dt.now():
-        return make_response(jsonify({'error': 'Invalid date and time'}), 400)
 
     if not name == "": event.name = name
     if not address == "": event.address = address
     if not game == "": event.game = game
     if not datetime == "":
+        #Invalid datetime
+        if dt.strptime(datetime, '%Y-%m-%d %H:%M:%S')<dt.now():
+            return make_response(jsonify({'error': 'Invalid date and time'}), 400)
         event.datetime = datetime
     if not description == "":
         event.description = description
