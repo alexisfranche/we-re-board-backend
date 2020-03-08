@@ -562,6 +562,39 @@ def logged_in_as_user(step, id):
 def you_are_not_event_manager(step):
     pass
 
+#ID_014 Access Manage My Events Page
+@step('Given I am logged in as a user with id=(\d+)')
+def given_i_am_logged_in_as_a_user(step,user_id):
+    world.user_id=user_id
+
+@step('And they manage an event with the id=(\d+)')
+def and_they_manage_this_event(step, event_id):
+    world.event_id=event_id
+    url="https://were-board.herokuapp.com/event/"+event_id
+    result=getJSONfromAPI(url)
+    
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.event_managed = result
+
+
+@step('Then the system displays some information about the events they manage')
+def then_the_system_displays_some_information_about_the_events_they_manage(step):
+    url="https://were-board.herokuapp.com/event/manager/"+str(world.user_id)
+    returned_event=getJSONfromAPI(url)
+    i=0
+
+    while(i<len(returned_event)):
+        assert int(returned_event[i]["event_manager_id"])== int(world.user_id)
+        i+=1
+
+
+@step('When I select the \'Manage my Events\' tab')  
+def i_select_manage_events_tab(step):
+    pass
+
+
 #ID_016 Modify an Event
 
 @step('Given I am logged in as the Event Manager with id=(\d+)')
@@ -604,6 +637,15 @@ def getJSONfromAPI(url):
     response = requests.get(url)
     data = response.json()
     return data
+def createEventAPI(address, datetime, description, event_manager,game, event_id, name, status):
+    url="https://were-board.herokuapp.com/event"
+    payload= "{\"address\":\""+address+"\",\"description\":\""+description+"\",\"event_manager_id\":\""+event_manager+"\"}, \"game\":\""+game+"\"}, \"id\":\""+event_id+"\"}, \"name\":\""+name+"\"},\"status\":\""+status+"\"} "
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response=requests.request("POST", url, headers=headers, data=payload)
+    return json.loads(response.text.encode('utf8'))
+
 
 def createUserAPI(name, email, password):
     url = "https://were-board.herokuapp.com/user"
@@ -677,15 +719,14 @@ def deleteAPI(url):
     response = requests.request("DELETE", url, headers=headers, data = payload)
 
     return json.loads(response.text.encode('utf8'))
-
-def createEventAPI(name, address, game, description, datetime, id):
+def createEventAPI(address, datetime,description, event_manager_id, game, name):
     url = "https://were-board.herokuapp.com/event"
 
-    payload = "{\"name\":\""+ name+"\", \"address\":\""+ address+"\", \"description\":\""+description+"\", \"datetime\":\""+ datetime+"\", \"event_manager_id\": \""+ str(id)+"\", \"game\":\""+game+"\"}"
+    payload = "{\"name\":\""+ name+"\", \"address\":\""+ address+"\", \"description\":\""+description+"\", \"datetime\":\""+ datetime+"\", \"event_manager_id\": \""+ event_manager_id+"\", \"game\":\""+game+"\"}"
+    print(payload)
     headers = {
       'Content-Type': 'application/json'
     }
 
     response = requests.request("POST", url, headers=headers, data = payload)
-
     return json.loads(response.text.encode('utf-8'))
