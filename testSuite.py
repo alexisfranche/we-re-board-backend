@@ -53,14 +53,90 @@ class FlaskTestCase(unittest.TestCase):
         tester = app.test_client()
         response = tester.post('/event',
                                json=dict(name="Anas", address="101 Game Street, Montreal", game="Texas Hold Em",
-                                         datetime="2020-03-08 09:05:06", description="Work hard, Play hard",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
                                          event_manager_id="1")
                                )
         self.assertEqual(response.status_code, 200)
         response = tester.get('/event')
         self.assertIn(
-            b'"address": "101 Game Street, Montreal", \n    "datetime": "2020-03-08T09:05:06+00:00", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em"',
+            b'"address": "101 Game Street, Montreal", \n    "datetime": "2022-03-08T09:05:06+00:00", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em"',
             response.data)
+
+    # Ensure that event behaves correctly with incorrect address
+    def test_without_address_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(name="Anas", game="Texas Hold Em",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Please complete all required fields', response.data)
+
+    # Ensure that event behaves correctly with incorrect address
+    def test_incorrect_address_event(self):
+        tester = app.test_client()
+        # response = tester.post('/event',
+        #                        json=dict(name="Anas", address="Montreal", game="Texas Hold Em",
+        #                                  datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+        #                                  event_manager_id="1")
+        #                        )
+        # self.assertEqual(response.status_code, 400)
+
+    # Ensure that event behaves correctly without description
+    def test_without_description_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(name="Anas", game="Texas Hold Em",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Please complete all required fields', response.data)
+
+    # Ensure that event behaves correctly without event_manager_id
+    def test_without_even_manager_id_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(name="Anas", game="Texas Hold Em",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Please complete all required fields', response.data)
+
+    # Ensure that event behaves correctly without game
+    def test_without_game_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(name="Anas", address="101 Game Street, Montreal",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Please complete all required fields', response.data)
+
+    # Ensure that event behaves correctly with past datetime
+    def test_past_datetime_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(name="Anas", address="101 Game Street, Montreal", game="Texas Hold Em",
+                                         datetime="2019-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Invalid date and time', response.data)
+
+    # Ensure that event behaves correctly without name
+    def test_without_name_event(self):
+        tester = app.test_client()
+        response = tester.post('/event',
+                               json=dict(address="101 Game Street, Montreal", game="Texas Hold Em",
+                                         datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
+                                         event_manager_id="1")
+                               )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Please complete all required fields', response.data)
 
 
 if __name__ == '__main__':
