@@ -591,7 +591,7 @@ def then_i_can_edit_info(step):
         
         url= "https://were-board.herokuapp.com/event/"+str(world.event_id)
         #data="{\"name\":\""+world.new_name+"\", \"address\":\""+world.old_event["address"]+"\", \"game\":\""+world.old_event["game"]+"\", \"datetime\":\""+world.old_event["datetime"]+"\", \"description\":\""+world.old_event["description"]+"\"}"
-        data="{\"name\":\""+world.new_name+"\", \"address\":\""+""+"\", \"game\":\""+""+"\", \"datetime\":\""+""+"\", \"description\":\""+""+"\"}"
+        data="{\"name\":\""+world.new_name+"\", \"address\":\"\", \"game\":\"\", \"datetime\":\"\", \"description\":\"\"}"
         world.new_event= putJSONtoAPI(url, data)
 
 @step('And when I press the \'Save\' button the Event\'s information is updated')
