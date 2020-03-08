@@ -260,7 +260,8 @@ def get_active_events():
     try:
         active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
     except:
-        return make_response(jsonify({'error': 'Date and time filter error'}), 500)
+        error = "Date and time filter error " + Event.Datetime
+        return make_response(jsonify({'error': error}), 500)
     result = events_schema.dump(active_events)
     if not result:
         return make_response(jsonify({'error': 'No active event available. Please try again later.'}), 400)
@@ -283,8 +284,7 @@ def get_events_by_category(game):
     try:
         category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
     except:
-        error = "Date and time filter error " + Event.datetime
-        return make_response(jsonify({'error': error}), 500)
+        return make_response(jsonify({'error': Event.datetime}), 500)
     result = events_schema.dump(category_events)
     if not result:
         return make_response(jsonify({'error': 'No active events of this category.'}), 400)
