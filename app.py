@@ -258,9 +258,9 @@ def get_events():
 @app.route('/event/active', methods=['GET'])
 def get_active_events():
     try:
-        active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')>dt.now())).all()
     except:
-        error = "Date and time filter error " + Event.Datetime
+        error = "Date and time filter error " + Event.Datetime.strftime('%Y-%m-%d %H:%M:%S')
         return make_response(jsonify({'error': error}), 500)
     result = events_schema.dump(active_events)
     if not result:
