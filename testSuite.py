@@ -53,7 +53,7 @@ class FlaskTestCase(unittest.TestCase):
         tester = app.test_client()
         response = tester.post('/event',
                                json=dict(name="Anas", address="101 Game Street, Montreal", game="Texas Hold Em",
-                                         datetime="2020-03-08 09:05:06", description="Work hard, Play hard",
+                                         datetime="2021-03-08 09:05:06", description="Work hard, Play hard",
                                          event_manager_id="1")
                                )
         self.assertEqual(response.status_code, 200)
