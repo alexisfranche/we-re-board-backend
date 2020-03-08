@@ -282,9 +282,9 @@ def event_detail(id):
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
     try:
-        category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(dt.fromtimestamp(Event.datetime).isoformat(), '%Y-%m-%dT%H:%M:%S+00:00')>dt.now())).all()
     except:
-        return make_response(jsonify({'error': Event.datetime}), 500)
+        return make_response(jsonify({'error': dt.fromtimestamp(Event.datetime).isoformat()}), 500)
     result = events_schema.dump(category_events)
     if not result:
         return make_response(jsonify({'error': 'No active events of this category.'}), 400)
