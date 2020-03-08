@@ -59,7 +59,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         response = tester.get('/event')
         self.assertIn(
-            b'"address": "101 Game Street, Montreal", \n    "datetime": "2022-03-08T09:05:06+00:00", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em"',
+            b'"address": "101 Game Street, Montreal", \n    "datetime": "2022-03-08T09:05:06", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em"',
             response.data)
 
     # Ensure that event behaves correctly with incorrect address
