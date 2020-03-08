@@ -257,7 +257,7 @@ def get_events():
 # Get all active events
 @app.route('/event/active', methods=['GET'])
 def get_active_events():
-    active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%dT%H:%M:%S+00:00')>dt.now())).all()
+    active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
     result = events_schema.dump(active_events)
     if not result:
         return make_response(jsonify({'error': 'No active event available. Please try again later.'}), 400)
@@ -277,7 +277,7 @@ def event_detail(id):
 @app.route('/event/category/<game>', methods=['GET'])
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
-    category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%dT%H:%M:%S+00:00')>dt.now())).all()
+    category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
     result = events_schema.dump(category_events)
     if not result:
         return make_response(jsonify({'error': 'No active events of this category.'}), 400)
