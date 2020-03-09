@@ -54,10 +54,8 @@ users_schema = UserSchema(many=True)
 
 # Event status enumeration
 class EventStatus(enum.Enum):
-    Upcoming = "upcoming"
-    Finished = "finished"
+    Active = "active"
     Cancelled = "cancelled"
-    Rescheduled = "rescheduled"
 
 
 # Event Class/Model
@@ -148,7 +146,7 @@ def add_event():
         game = request.json['game']
         datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
         description = request.json['description']
-        status = "upcoming"#EventStatus.Upcoming.value
+        status = EventStatus.Active.value
         event_manager_id = request.json['event_manager_id']
     except:
         isMissingField = True
@@ -259,8 +257,13 @@ def get_events():
 # Get all active events
 @app.route('/event/active', methods=['GET'])
 def get_active_events():
-    active_events = Event.query.filter(or_(Event.status == "upcoming", Event.status == "rescheduled")).all()
+    try:
+        active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+    except:
+        return make_response(jsonify({'error': 'Date and time filter error'}), 500)
     result = events_schema.dump(active_events)
+    if not result:
+        return make_response(jsonify({'error': 'No active event available. Please try again later.'}), 400)
     return jsonify(result)
     
 # endpoint to get event info by id (returns everything about event)
@@ -277,7 +280,10 @@ def event_detail(id):
 @app.route('/event/category/<game>', methods=['GET'])
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
-    category_events =  all_events = Event.query.filter(and_(Event.game == game, or_(Event.status == "upcoming", Event.status == "rescheduled"))).all()
+    try:
+        category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+    except:
+        return make_response(jsonify({'error': 'date time error'}), 500)
     result = events_schema.dump(category_events)
     if not result:
         return make_response(jsonify({'error': 'No active events of this category.'}), 400)
@@ -305,7 +311,7 @@ def user_detail(id):
     return user_schema.jsonify(user)
 
 
-#Modify event
+#display managed events for a
 @app.route("/event/manage/<user_id>", methods=["GET"])
 def event_manage(user_id):
     my_user_id = int(user_id)
@@ -354,19 +360,30 @@ def get_Events_By_Manager(manager_id):
 # endpoint to modify an event
 @app.route('/event/<id>', methods=['PUT'])
 def event_update(id):
-    event = Event.query.get(id)
-    name = request.json['name']
-    address = request.json['address']
-    game = request.json['game']
-    datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
-    description = request.json['description']
+    isMissingField = False
+    try:
+        event = Event.query.get(id)
+        name = request.json['name']
+        address = request.json['address']
+        game = request.json['game']
+        datetime = request.json['datetime']  # example format 2020-04-08 04:05:06
+        description = request.json['description']
+    except:
+        isMissingField = True
+    
+    #error flows
+    #Missing field
+    if isMissingField:
+        return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
 
     if not name == "": event.name = name
     if not address == "": event.address = address
     if not game == "": event.game = game
     if not datetime == "":
-        event.datetime = request.json['datetime']
-        event.status = EventStatus.Rescheduled.value
+        #Invalid datetime
+        if dt.strptime(datetime, '%Y-%m-%d %H:%M:%S')<dt.now():
+            return make_response(jsonify({'error': 'Invalid date and time'}), 400)
+        event.datetime = datetime
     if not description == "":
         event.description = description
 
@@ -416,9 +433,6 @@ def user_update_desc(email):
     # dp.session.update(user)
     db.session.commit()
     return user_schema.jsonify(user)
-
-
-
 
 
 # modify

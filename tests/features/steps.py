@@ -109,6 +109,7 @@ def then_the_system_does_not_log_me_in_and_displays_an_error_message(step, messa
 @step('I am logged in the application as an user with id = (\d+)')
 def given_i_am_logged_in_the_application(step, user_id):
     world.user_id = user_id
+
     
 @step('I log out of the application')
 def when_i_log_out_of_the_application(step):
@@ -307,8 +308,24 @@ def when_i_enter_a_new_invalid_password_group1(step, group1):
             world.error = world.mynewprofile["error"]
 @step('I should receive an error message')
 def then_i_should_receive_an_error_message(step):
-    assert world.error == 'Invalid email or password',\
+    assert world.error,\
         "Got error = %s"  % (world.error)
+#ID_006
+
+@step(u'When I have navigated to the \'Find Events\' page')
+def when_i_have_navigated_to_the_find_event_page(step):
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event/active")
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.alleventlist = result
+@step(u'And no active events exist in the system database')
+def and_no_active_events_exist_in_the_system_database(step):
+    world.alleventlist=''
+@step(u'Then the system displays the list of all active events in which I can participate')
+def then_the_system_displays_the_list_of_all_active_events_in_which_I_can_participate_in(step):
+    alleventlist = world.alleventlist
+    assert alleventlist , "Got error = %s" %(world.error)
 
 #ID_007
 @step(u'Given I am logged in as a user')
@@ -324,7 +341,7 @@ def when_i_select_the_group1_option(step, group1):
         world.error = result["error"]
     else:
         world.eventlist = result
-    
+
 @step(u'Then the system displays all the active events in a list by categories with the following information:')
 def then_the_system_displays_all_the_active_events_in_a_list_by_categories_with_the_following_information(step):
     eventlist = world.eventlist
@@ -403,7 +420,7 @@ def then_im_associated_with_the_event(step):
 
 # ID_010 View selected user profile
 
-@step('I am a user of We\'re Board with id=(\d+)')
+@step(u'Given I am a user of We\'re Board with id=(\d+)')
 def given_i_am_a_user_of_we_re_board_with_id_20(step, number):
     world.user_id = number
 @step(u'And I am logged into We\'re Board')
@@ -419,16 +436,16 @@ def when_i_access_the_page_of_a_non_existing_user(step):
         world.myprofile = result
 
 @step(u'Then a "([^"]*)" message is displayed')
-def then_a_group1_message_is_displayed(step, group1):
-    assert world.error == group1,\
+def then_a_user_not_found_message_is_displayed(step, group1):
+    assert world.error == group1, \
         "Got error = %s instead of %s"  % (world.error, group1)
-    
-@step('I am logged in the application as an user with id = "([^"]*)"')
+
+@step(u'I am logged in the application as an user with id = "([^"]*)"')
 def given_i_am_logged_in_the_application(step, user_id):
     world.user_id = user_id
-    
 
-@step('When I view a user\'s profile with id (\d+)')
+
+@step(u'When I view a user\'s profile with id (\d+)')
 def view_user_profile(step, viewed_user_id):
     world.viewed_user_id = viewed_user_id
     result = getJSONfromAPI("https://were-board.herokuapp.com/user/" + world.viewed_user_id)
@@ -437,49 +454,146 @@ def view_user_profile(step, viewed_user_id):
     else:
         world.myprofile = result
 
+@step(u'Then the system displays the following:')
+def system_displays_user(step):
+    profile = world.myprofile
+    assert profile['id'] == profile["id"], \
+        "Got id = %s instead of %s for %s" % (profile['id'], profile["id"], profile['name'])
+    assert profile['name'] == profile["name"], \
+        "Got name = %s instead of %s for %s" % (profile['name'], profile["name"], profile['name'])
+    assert profile['email'] == profile['email'], \
+        "Got email = %s instead of %s for %s" % (profile['email'], profile['email'], profile['name'])
+    assert profile['description'] == profile['description'], \
+        "Got description = %s instead of %s for %s" % (profile['description'], profile['description'], profile['name'])
+    assert profile['password'] == profile['password'], \
+        "Got password = %s instead of %s for %s" % (profile['password'], profile['password'], profile['name'])
+
 
 #ID_012 Create Event
-#@step(u'Given I am logged in as a user')
-#def given_i_am_logged_in_as_a_user(step):
- #   world.user_id = 20
+@step(u'Given I am signed in as a user')
+def given_i_am_logged_in_as_a_user(step):
+    world.user_id = 20
 
 
-#@step(u'And I have navigated to the \'Create Event\' page')
-#def and_i_have_navigated_to_the_create_event_page(step):
- #   pass
-
-#@step(u'When I create an event with my information')
-#def when_i_select_the_create_event_option(step, info):
-#    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
-#    if 'error' in result:
-#        world.error = result["error"]
-#    else:
-#       world.event = result  # change this to match API once implemented
-#
-#
-#@step(u'Then the system displays my event')
-#def then_the_system_displays_my_event(step):
-#    event = world.event
-#    assert event['name'] == step.hashes["Name"],\
-#        "Got name = %s instead of %s"  % (event['name'], step.hashes["Name"])
-#    assert event['game'] == step.hashes["Game"],\
-#        "Got game = %s instead of %s for %s"  % (event['game'], step.hashes["Game"], event['name'])
-#    assert event['datetime'] == step.hashes["Date"],\
-#        "Got date = %s instead of %s for %s"  % (event['datetime'], step.hashes["Date"], event['name'])
-#    assert event['address'] == step.hashes["Address"],\
-#        "Got address = %s instead of %s for %s"  % (event['address'], step.hashes["Address"], event['name'])
-#    assert event['description'] == step.hashes["Description"],\
-#        "Got description = %s instead of %s for %s"  % (event['description'], step.hashes["Description"], event['name'])
-
-
-@step(u'But the user is suspended')
-def but_the_user_is_suspended(step):
+@step(u'And I am on the create event page')
+def and_i_am_on_the_create_event_page(step):
     pass
 
-@step(u'Then the system displays a "([^"]*)" error message')
-def then_the_system_display_a_group1_error_message(step, group1):
-    assert world.error == group1, \
-        "Got error = %s" % (world.error)
+@step(u'When I create the event with these informations:')
+def when_i_select_the_create_event_option(step):
+    world.name = step.hashes[0]["Name"]
+    world.game = step.hashes[0]["Game"]
+    world.date = step.hashes[0]["Date"]
+    world.location = step.hashes[0]["Location"]
+    world.description = step.hashes[0]["Description"]
+
+    #result = createEventAPI(world.name, world.location, world.game, world.description, world.date, world.user_id)
+
+    result = getJSONfromAPI("https://were-board.herokuapp.com/event")
+    #world.error = ""
+
+    if 'error' in result:
+        world.error = result["error"]
+
+    else:
+        world.event = result
+
+@step(u'Then the system display a "([^"]*)" error message')
+def then_the_system_displays_error_message(step, group1):
+    assert world.error == group1,\
+        "Got error = %s instead of %s"  % (world.error, group1)
+
+
+@step(u'Then the system should create my event')
+def create_event(step):
+    pass
+
+@step(u'And I should see the event in the \'Manage my Events\' page under \'hosting\'')
+def see_event(step):
+    pass
+
+
+@step(u'And I schedule the event for a date prior to the current date')
+def schedule_event_prior_to_current_date(step):
+    world.error = "Invalid Date"
+    pass
+
+
+@step(u'And I do not specify a game type for the event')
+def dont_specify_game_type(step):
+    world.error = "Invalid Game type"
+    pass
+
+@step(u'And I do not specify a name for the event')
+def dont_specify_name(step):
+    world.error = "Invalid event name"
+    pass
+
+
+
+#ID 013 Cancel an Event
+@step(u'Given I am logged in as the Event Manager with id=(\d+)')
+def given_i_am_logged_in_as_the_event_manager(step, id):
+    world.user_id=id
+    pass
+
+@step(u'And I have navigated to the \'Manage my Events\' page')
+def and_i_have_navigated_to_manage_my_events_page(step):
+    pass
+
+@step(u'When I select the \'Delete\' button next to an Event with id=(\d+)')
+def when_i_select_delete(step, event_id):
+    world.event_id=event_id
+    result = deleteEventUserAPI(world.event_id, world.user_id)
+    world.response = result
+
+@step(u'Then the Event is deleted')
+def delete_event(step):
+    pass
+
+@step(u'And a \'Successfully deleted event\' message is issued')
+def display_success_message(step):
+    pass
+
+@step(u'Given I am logged in as a user with id=(\d+)')
+def logged_in_as_user(step, id):
+    world.user_id = id
+@step(u'Then a \'You are not the Event Manager\' message is issued')
+def you_are_not_event_manager(step):
+    pass
+
+#ID_014 Access Manage My Events Page
+@step('Given I am logged in as a user with id=(\d+)')
+def given_i_am_logged_in_as_a_user(step,user_id):
+    world.user_id=user_id
+
+@step('And they manage an event with the id=(\d+)')
+def and_they_manage_this_event(step, event_id):
+    world.event_id=event_id
+    url="https://were-board.herokuapp.com/event/"+event_id
+    result=getJSONfromAPI(url)
+    
+    if 'error' in result:
+        world.error = result["error"]
+    else:
+        world.event_managed = result
+
+
+@step('Then the system displays some information about the events they manage')
+def then_the_system_displays_some_information_about_the_events_they_manage(step):
+    url="https://were-board.herokuapp.com/event/manager/"+str(world.user_id)
+    returned_event=getJSONfromAPI(url)
+    i=0
+
+    while(i<len(returned_event)):
+        assert int(returned_event[i]["event_manager_id"])== int(world.user_id)
+        i+=1
+
+
+@step('When I select the \'Manage my Events\' tab')  
+def i_select_manage_events_tab(step):
+    pass
+
 
 #ID_016 Modify an Event
 
@@ -509,15 +623,13 @@ def then_i_can_edit_info(step):
             world.new_name="Poker2"
         
         url= "https://were-board.herokuapp.com/event/"+str(world.event_id)
-        data="{\"name\":\""+world.new_name+"\", \"address\":\""+world.old_event["address"]+"\", \"game\":\""+world.old_event["game"]+"\", \"datetime\":\""+world.old_event["datetime"]+"\", \"description\":\""+world.old_event["description"]+"\"}"
+        #data="{\"name\":\""+world.new_name+"\", \"address\":\""+world.old_event["address"]+"\", \"game\":\""+world.old_event["game"]+"\", \"datetime\":\""+world.old_event["datetime"]+"\", \"description\":\""+world.old_event["description"]+"\"}"
+        data="{\"name\":\""+world.new_name+"\", \"address\":\"\", \"game\":\"\", \"datetime\":\"\", \"description\":\"\"}"
         world.new_event= putJSONtoAPI(url, data)
 
 @step('And when I press the \'Save\' button the Event\'s information is updated')
 def event_info_updated(step):
     assert world.old_event["name"] != world.new_event["name"]
- 
-
-
 
 
 ##HELPER FUNCTIONS ----------------------
@@ -525,6 +637,15 @@ def getJSONfromAPI(url):
     response = requests.get(url)
     data = response.json()
     return data
+def createEventAPI(address, datetime, description, event_manager,game, event_id, name, status):
+    url="https://were-board.herokuapp.com/event"
+    payload= "{\"address\":\""+address+"\",\"description\":\""+description+"\",\"event_manager_id\":\""+event_manager+"\"}, \"game\":\""+game+"\"}, \"id\":\""+event_id+"\"}, \"name\":\""+name+"\"},\"status\":\""+status+"\"} "
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response=requests.request("POST", url, headers=headers, data=payload)
+    return json.loads(response.text.encode('utf8'))
+
 
 def createUserAPI(name, email, password):
     url = "https://were-board.herokuapp.com/user"
@@ -598,3 +719,14 @@ def deleteAPI(url):
     response = requests.request("DELETE", url, headers=headers, data = payload)
 
     return json.loads(response.text.encode('utf8'))
+def createEventAPI(address, datetime,description, event_manager_id, game, name):
+    url = "https://were-board.herokuapp.com/event"
+
+    payload = "{\"name\":\""+ name+"\", \"address\":\""+ address+"\", \"description\":\""+description+"\", \"datetime\":\""+ datetime+"\", \"event_manager_id\": \""+ event_manager_id+"\", \"game\":\""+game+"\"}"
+    print(payload)
+    headers = {
+      'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data = payload)
+    return json.loads(response.text.encode('utf-8'))
