@@ -311,7 +311,7 @@ def user_detail(id):
     return user_schema.jsonify(user)
 
 
-#Modify event
+#display managed events for a
 @app.route("/event/manage/<user_id>", methods=["GET"])
 def event_manage(user_id):
     my_user_id = int(user_id)
