@@ -8,9 +8,9 @@ As a user of the "We're Board" app, I would like to be able to browse active eve
       And I have navigated to the 'Find Events' page
      When I select the 'monopoly' option
      Then the system displays all the active events in a list by categories with the following information:
-		| Name             		        | Game  	| Date      		 		|	Address				|
-		| Monopoly Time					| monopoly 	| 2020-04-08T04:05:06+00:00	|	200 Collect Street	|
-		| Monopoly 2: Electric Boogaloo	| monopoly 	| 2020-05-08T04:05:06+00:00 |	200 Collect Street	|
+		| Name             		       		| Game  	| Date      		|	Address			|
+		| Monopoly Time					| monopoly 	| 2020-04-08T04:05:06	|	200 Collect Street	|
+		| Monopoly 2: Electric Boogaloo			| monopoly 	| 2020-05-08T04:05:06 	|	200 Collect Street	|
 	  
 
   Scenario: Browse active events list by categories when no active events of that category (Error Flow)
