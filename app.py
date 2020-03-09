@@ -258,7 +258,8 @@ def get_events():
 @app.route('/event/active', methods=['GET'])
 def get_active_events():
     try:
-        active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        #active_events = Event.query.filter(and_(Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        active_events = Event.query.filter(Event.status == EventStatus.Active.value).all()
     except:
         return make_response(jsonify({'error': 'Date and time filter error'}), 500)
     result = events_schema.dump(active_events)
@@ -281,7 +282,8 @@ def event_detail(id):
 def get_events_by_category(game):
     game = urllib.parse.unquote_plus(game)
     try:
-        category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        #category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value, dt.strptime(Event.datetime, '%Y-%m-%d %H:%M:%S')>dt.now())).all()
+        category_events =  all_events = Event.query.filter(and_(Event.game == game, Event.status == EventStatus.Active.value)).all()
     except:
         return make_response(jsonify({'error': 'date time error'}), 500)
     result = events_schema.dump(category_events)
