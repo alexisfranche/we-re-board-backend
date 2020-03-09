@@ -48,19 +48,38 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/', follow_redirects=True)
         self.assertIn(b'You need to login first.', response.data)
 
-    # Ensure that event behaves correctly
-    def test_event(self):
+    # Ensure that listing event behaves correctly
+    def test_list_event(self):
         tester = app.test_client()
-        response = tester.post('/event',
+        response = tester.get('/event')
+        self.assertEqual(response.status_code, 200)
+
+    # Ensure that create event behaves correctly and modify event
+    def test_create_event(self):
+        tester = app.test_client()
+        response = tester.get('/event')
+        self.assertEqual(response.status_code, 200)
+
+        event = tester.post('/event',
                                json=dict(name="Anas", address="101 Game Street, Montreal", game="Texas Hold Em",
                                          datetime="2022-03-08 09:05:06", description="Work hard, Play hard",
                                          event_manager_id="1")
                                )
         self.assertEqual(response.status_code, 200)
         response = tester.get('/event')
-        self.assertIn(
-            b'"address": "101 Game Street, Montreal", \n    "datetime": "2022-03-08T09:05:06+00:00", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em"',
-            response.data)
+        expected = '"address": "101 Game Street, Montreal", \n    "datetime": "2022-03-08T09:05:06", \n    "description": "Work hard, Play hard", \n    "event_manager_id": 1, \n    "game": "Texas Hold Em", \n    "id": ' + str(event.json['id']) + ', \n    "name": "Anas", \n    "status": "' + str(event.json['status']) + '"'
+        self.assertIn(expected.encode(), response.data)
+
+        # Manage/modify event
+        event = tester.put('/event/' + str(event.json['id']),
+                               json = dict(name="Admin", address="102 Game Street, Montreal", game="Poker",
+                                         datetime="2021-03-08 09:05:06", description="Texas Hold Em",
+                                         event_manager_id="1")
+                               )
+        response = tester.get('/event')
+        self.assertEqual(response.status_code, 200)
+        expected = '"address": "102 Game Street, Montreal", \n    "datetime": "2021-03-08T09:05:06", \n    "description": "Texas Hold Em", \n    "event_manager_id": 1, \n    "game": "Poker", \n    "id": ' + str(event.json['id']) + ', \n    "name": "Admin", \n    "status": "' + str(event.json['status']) + '"'
+        self.assertIn(expected.encode(), response.data)
 
     # Ensure that event behaves correctly with incorrect address
     def test_without_address_event(self):
