@@ -164,7 +164,7 @@ class FlaskTestCase(unittest.TestCase):
         data = {"name":"Antonios", "address":"2345 Rue life ouest", "game":"board game night","datetime":"2020-04-08 07:09:01", "description":"all kinds of board games to play", "event_manager_id":'2'}
         event = tester.post('/event', json=data)
         response = tester.get('/event/'+ str(event.json['id']), follow_redirects=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     # Ensure that access event behaves incorrectly 
     def test_incorrect_access_event(self):
