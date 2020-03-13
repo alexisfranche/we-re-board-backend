@@ -181,6 +181,38 @@ def add_event_user():
 
     return event_user_relationship_schema.jsonify(new_event_user)
 
+# Kick user out of event
+@app.route('/event/<e_id>/user/<u_id>/kick', methods=['DELETE'])
+def kick_event_user():
+    try:
+        manager_id = request.json['event_manager_id']
+    except:
+        return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
+    event_user = Event_User.query.filter_by(event_id = e_id, user_id = u_id).first()
+    if event_user is None:
+        abort(404)
+    event = Event.query.get(e_id)
+    if event.event_manager_id != manager_id:
+        return make_response(jsonify({'error': 'You are not the event manager'}), 401)
+    db.session.delete(event_user)
+    db.session.commit()
+    return
+
+
+# Backout of an event
+@app.route('/event/<e_id>/backout', methods=['DELETE'])
+def backout_event_user():
+    try:
+        u_id = request.json['user_id']
+    except:
+        return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
+    event_user = Event_User.query.filter_by(event_id = e_id, user_id = int(u_id)).first()
+    if event_user is None:
+        abort(404)
+    db.session.delete(event_user)
+    db.session.commit()
+    return
+
 
 regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
 
