@@ -182,13 +182,14 @@ def add_event_user():
     return event_user_relationship_schema.jsonify(new_event_user)
 
 # Kick user out of event
-@app.route('/event/<e_id>/user/<u_id>/kick', methods=['DELETE'])
+@app.route('/event/kick/<e_id>', methods=['DELETE'])
 def kick_event_user():
     try:
+        user_id = request.json['user_id']
         manager_id = request.json['event_manager_id']
     except:
         return make_response(jsonify({'error': 'Please complete all required fields'}), 400)
-    event_user = Event_User.query.filter_by(event_id = e_id, user_id = u_id).first()
+    event_user = Event_User.query.filter_by(event_id = e_id, user_id = int(user_id)).first()
     if event_user is None:
         abort(404)
     event = Event.query.get(e_id)
@@ -200,7 +201,7 @@ def kick_event_user():
 
 
 # Backout of an event
-@app.route('/event/<e_id>/backout', methods=['DELETE'])
+@app.route('/event/backout/<e_id>', methods=['DELETE'])
 def backout_event_user():
     try:
         u_id = request.json['user_id']
