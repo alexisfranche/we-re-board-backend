@@ -1,4 +1,4 @@
-Feature: Apply for an Event
+Feature: Rate an Event
 
 As a user of the "We're Board" app, I would like to rate an event in the app 
 so that I can inform all the other users how satisfied I was with the event.
