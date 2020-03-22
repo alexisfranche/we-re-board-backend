@@ -631,6 +631,38 @@ def then_i_can_edit_info(step):
 def event_info_updated(step):
     assert world.old_event["name"] != world.new_event["name"]
 
+#ID019 Kick out an Event Participant
+@step(u'Given I am logged in as the user with id=(\d+)')
+def given_i_am_logged_in_as_the_user_with_id(step, manager_id):
+    world.manager_id= manager_id
+@step(u'And I am the event manager for event with id=(\d+)')
+def and_i_am_the_event_manager_for_event_with_id(step, event_id):
+    world.event_id= event_id
+    world.event_details= getJSONfromAPI("https://were-board.herokuapp.com/event/"+str(world.event_id))
+    if 'error' in world.old_event:
+        assert False, 'event with id '+str(world.event_id)+'does not exist'
+    else:
+        if(int(world.event_details["event_manager_id"])!=int(world.manager_id)):
+            assert False, 'user with id '+str(world.manager_id)+'does not manage the event with id '+str(world.event_id)
+
+@step(u'When kick out user with id=(\d+) from the event')
+def when_kick_out_user_with_id_20_from_the_event(step, user_id):
+    world.user_id=user_id
+    kickEventUserAPI(world.event_id, world.user_id, world.manager_id)
+
+
+@step(u'Then that user should no longer be associated to the event')
+def then_that_user_should_no_longer_be_associated_to_the_event(step):
+    result = existsEventUserAPI(world.event_id, world.user_id)
+    if 'error' in result:
+        world.error = result["error"]
+        raise AssertionError("false")
+    else:
+        world.response = result
+        assert str(world.response["is_joined"]) == str("False"), \
+            "Got %s instead of False" % (str(world.response["is_joined"]))
+        result = applyEventAPI(world.event_id, world.user_id)
+
 
 ##HELPER FUNCTIONS ----------------------
 def getJSONfromAPI(url):
@@ -689,7 +721,18 @@ def deleteEventUserAPI(event_id, user_id):
     requests.request("DELETE", url, headers=headers)
 
     return
-    
+def kickEventUserAPI(event_id, user_id, manager_id):
+    url = "https://were-board.herokuapp.com/event/kick/" + str(event_id)
+
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    payload = "{\"user_id\":\""+user_id+"\",\"event_manager_id\":\""+manager_id+"\"}"
+
+    response=requests.request("DELETE", url, headers=headers, data=payload)
+
+    return 
+
 def getJSONfromLoginAPI(email, password):
     url = "https://were-board.herokuapp.com/login"
     payload = "{\"email\":\""+email+"\",\"password\":\""+password+"\"}"
