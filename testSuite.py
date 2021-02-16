@@ -197,5 +197,17 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.post('/event_user/exists', json=event_user_data)
         self.assertEqual(response.json['is_joined'], False)
 
+    # Ensure correct find event (list all events)
+    def test_find_event(self):
+        tester = app.test_client()
+        response = tester.get('/event/active')
+        self.assertIn(b'id', response.data)
+        self.assertIn(b'name', response.data)
+        self.assertIn(b'address', response.data)
+        self.assertIn(b'game', response.data)
+        self.assertIn(b'description', response.data)
+        self.assertIn(b'datetime', response.data)
+        self.assertIn(b'status', response.data)
+
 if __name__ == '__main__':
     unittest.main()
