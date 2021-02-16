@@ -197,5 +197,20 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.post('/event_user/exists', json=event_user_data)
         self.assertEqual(response.json['is_joined'], False)
 
+    # Ensure correct cancel event
+    def test_correct_cancel_event(self):
+        tester = app.test_client()
+        data = {"name":"Antonios", "address":"2345 Rue life ouest", "game":"board game night","datetime":"2020-04-08 07:09:01", "description":"all kinds of board games to play", "event_manager_id":'2'}
+        event = tester.post('/event', json=data)
+        cancel_event_url = '/event/cancel/' + str(event.json['id'])
+        response = tester.put(cancel_event_url)
+        self.assertEqual(200, response.status_code)
+
+    # Ensure incorrect cancel event
+    def test_incorrect_cancel_event(self):
+        tester = app.test_client()
+        response = tester.put('/event/cancel/420')
+        self.assertEqual(404, response.status_code)
+
 if __name__ == '__main__':
     unittest.main()
